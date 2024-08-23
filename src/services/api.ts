@@ -30,9 +30,11 @@ export const createApiClient = () => {
 
   // Ajouter un interceptor pour inclure le token JWT dans l'en-tête Authorization
   apiClient.interceptors.request.use((config) => {
-    const token = localStorage.getItem('token');
-    if (token) {
-      config.headers.Authorization = `Bearer ${token}`;
+    if (typeof window !== 'undefined') { // Vérifie si le code est exécuté côté client
+      const token = localStorage.getItem('token');
+      if (token) {
+        config.headers.Authorization = `Bearer ${token}`;
+      }
     }
     return config;
   });
