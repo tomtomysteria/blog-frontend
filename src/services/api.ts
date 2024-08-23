@@ -1,5 +1,15 @@
 import axios from 'axios';
 
+export const loginUser = async (email: string, password: string) => {
+  try {
+      const response = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/auth/login`, { email, password });
+      return response.data; // Assuming the response contains the JWT token and user info
+  } catch (error) {
+      console.error('Failed to login:', error);
+      throw error;
+  }
+};
+
 export type Article = {
   id: string;
   title: string;
@@ -72,3 +82,5 @@ export const createArticle = async (articleData: Omit<Article, 'id'>): Promise<A
     throw error;
   }
 };
+
+

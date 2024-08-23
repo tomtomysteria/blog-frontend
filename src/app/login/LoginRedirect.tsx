@@ -1,23 +1,18 @@
-"use client";
-
-import { useEffect } from 'react';
+import React, { useEffect } from 'react';
 import { useRouter } from 'next/router';
 import { useAuth } from '../../context/AuthContext';
 
-const LoginRedirect = ({ username, password }: { username: string, password: string }) => {
-  const { login } = useAuth();
-  const router = useRouter();
+const LoginRedirect: React.FC = () => {
+    const { token } = useAuth();
+    const router = useRouter();
 
-  useEffect(() => {
-    const handleLogin = async () => {
-      await login({ username, password });
-      router.push('/admin');
-    };
+    useEffect(() => {
+        if (token) {
+            router.push('/dashboard'); // Redirect to dashboard or another protected route
+        }
+    }, [token, router]);
 
-    handleLogin();
-  }, [login, router, username, password]);
-
-  return null; // Pas besoin de rendre quoi que ce soit, la redirection est effectuée automatiquement
+    return null; // This component doesn't render anything visible
 };
 
 export default LoginRedirect;
