@@ -1,22 +1,34 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useAuth } from '../../context/AuthContext';
 import { loginUser } from '../../services/api';
+import { useRouter } from 'next/navigation';
 
 const LoginComponent: React.FC = () => {
     const [identifier, setIdentifier] = useState('');
     const [password, setPassword] = useState('');
-    const { login } = useAuth(); // Using the login function from context
+    const { login, token, role } = useAuth();
+    const router = useRouter();
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         try {
             const data = await loginUser(identifier, password);
-            login(data.token); // Storing the JWT token in context
-            // Redirect or update UI as needed
+            login(data.token, data.role); // Storing the JWT token and user role in context
         } catch (error) {
             console.error('Login failed:', error);
         }
     };
+
+    // Effect to handle redirection based on role after successful login
+    useEffect(() => {
+        if (token && role) {
+            if (role === 'super-admin' || role === 'admin') {
+                router.push('/admin'); // Redirect to admin page for super-admin and admin roles
+            } else if (role === 'blogger') {
+                router.push('/'); // Redirect to home page for blogger role
+            }
+        }
+    }, [token, role, router]);
 
     return (
         <form onSubmit={handleSubmit}>
