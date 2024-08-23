@@ -1,6 +1,6 @@
 "use client";
 
-import React, { createContext, useState, useContext, ReactNode } from 'react';
+import React, { createContext, useState, useContext, ReactNode, useEffect } from 'react';
 
 interface AuthContextType {
     token: string | null;
@@ -18,6 +18,16 @@ const AuthContext = createContext<AuthContextType | undefined>(undefined);
 export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     const [token, setToken] = useState<string | null>(null);
     const [role, setRole] = useState<string | null>(null);
+
+    // Load token and role from localStorage when the component mounts
+    useEffect(() => {
+        const storedToken = localStorage.getItem('token');
+        const storedRole = localStorage.getItem('role');
+        if (storedToken) {
+            setToken(storedToken);
+            setRole(storedRole);
+        }
+    }, []);
 
     const login = (newToken: string, userRole: string) => {
         setToken(newToken);
