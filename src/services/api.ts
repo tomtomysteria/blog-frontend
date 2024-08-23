@@ -1,8 +1,8 @@
 import axios from 'axios';
 
-export const loginUser = async (email: string, password: string) => {
+export const loginUser = async (identifier: string, password: string) => {
   try {
-      const response = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/auth/login`, { email, password });
+      const response = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/auth/login`, { identifier, password });
       return response.data; // Assuming the response contains the JWT token and user info
   } catch (error) {
       console.error('Failed to login:', error);
@@ -29,20 +29,13 @@ export const createApiClient = () => {
   });
 
   // Ajouter un interceptor pour inclure le token JWT dans l'en-tête Authorization
-  apiClient.interceptors.request.use(
-    (config) => {
-      if (typeof window !== 'undefined') {
-        const token = localStorage.getItem('token');
-        if (token) {
-          config.headers.Authorization = `Bearer ${token}`;
-        }
-      }
-      return config;
-    },
-    (error) => {
-      return Promise.reject(error);
+  apiClient.interceptors.request.use((config) => {
+    const token = localStorage.getItem('token');
+    if (token) {
+      config.headers.Authorization = `Bearer ${token}`;
     }
-  );
+    return config;
+  });
 
   return apiClient;
 };

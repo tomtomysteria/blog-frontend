@@ -3,14 +3,14 @@ import { useAuth } from '../../context/AuthContext';
 import { loginUser } from '../../services/api';
 
 const LoginComponent: React.FC = () => {
-    const [email, setEmail] = useState('');
+    const [identifier, setIdentifier] = useState('');
     const [password, setPassword] = useState('');
     const { login } = useAuth(); // Using the login function from context
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         try {
-            const data = await loginUser(email, password);
+            const data = await loginUser(identifier, password);
             login(data.token); // Storing the JWT token in context
             // Redirect or update UI as needed
         } catch (error) {
@@ -21,11 +21,11 @@ const LoginComponent: React.FC = () => {
     return (
         <form onSubmit={handleSubmit}>
             <div>
-                <label>Email:</label>
+                <label>Username or Email:</label>
                 <input
-                    type="email"
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
+                    type="text"
+                    value={identifier}
+                    onChange={(e) => setIdentifier(e.target.value)}
                     required
                 />
             </div>
