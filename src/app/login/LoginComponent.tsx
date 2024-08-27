@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useAuth } from '../../context/AuthContext';
 import { loginUser } from '../../services/api';
 import { useRouter } from 'next/navigation';
+import Link from 'next/link';
 
 const LoginComponent: React.FC = () => {
     const [identifier, setIdentifier] = useState('');
@@ -51,6 +52,9 @@ const LoginComponent: React.FC = () => {
                 />
             </div>
             <button type="submit">Login</button>
+            <p>
+                Don't have an account? <Link href="/register">Sign up here</Link>
+            </p>
         </form>
     );
 };

@@ -1,15 +1,5 @@
 import axios from 'axios';
 
-export const loginUser = async (identifier: string, password: string) => {
-  try {
-      const response = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/auth/login`, { identifier, password });
-      return response.data; // Assuming the response contains the JWT token and user info
-  } catch (error) {
-      console.error('Failed to login:', error);
-      throw error;
-  }
-};
-
 export type Article = {
   id: string;
   title: string;
@@ -19,25 +9,27 @@ export type Article = {
 };
 
 // Créer une instance Axios avec un interceptor pour ajouter le token JWT
-export const createApiClient = () => {
+export const createApiClient = (withAuth: boolean = true) => {
   const apiClient = axios.create({
     baseURL: process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3000',
     headers: {
       'Content-Type': 'application/json',
     },
-    withCredentials: true, // Inclure les credentials dans les requêtes
+    withCredentials: true,
   });
 
-  // Ajouter un interceptor pour inclure le token JWT dans l'en-tête Authorization
-  apiClient.interceptors.request.use((config) => {
-    if (typeof window !== 'undefined') { // Vérifie si le code est exécuté côté client
-      const token = localStorage.getItem('token');
-      if (token) {
-        config.headers.Authorization = `Bearer ${token}`;
+  // Ajouter un interceptor pour inclure le token JWT dans l'en-tête Authorization, sauf si withAuth est false
+  if (withAuth) {
+    apiClient.interceptors.request.use((config) => {
+      if (typeof window !== 'undefined') {
+        const token = localStorage.getItem('token');
+        if (token) {
+          config.headers.Authorization = `Bearer ${token}`;
+        }
       }
-    }
-    return config;
-  });
+      return config;
+    });
+  }
 
   return apiClient;
 };
@@ -78,4 +70,32 @@ export const createArticle = async (articleData: Omit<Article, 'id'>): Promise<A
   }
 };
 
+// Fonction pour créer un utilisateur
+export const createUser = async (userData: {
+  firstname: string;
+  lastname: string;
+  email: string;
+  username: string;
+  password: string;
+  role: string;
+  birthdate?: string;
+}) => {
+  try {
+      const apiClient = createApiClient();
+      const response = await apiClient.post('/users', userData);
+      return response.data;
+  } catch (error) {
+      throw new Error('Error creating user');
+  }
+};
 
+export const loginUser = async (identifier: string, password: string) => {
+  try {
+      const apiClient = createApiClient(false); // Désactiver l'ajout automatique du token
+      const response = await apiClient.post('/auth/login', { identifier, password });
+      return response.data; // Assuming the response contains the JWT token and user info
+  } catch (error) {
+      console.error('Failed to login:', error);
+      throw error;
+  }
+};
