@@ -200,6 +200,20 @@ export const updateUser = async (
   }
 };
 
+// Fonction pour supprimer un utilisateur
+export const deleteUser = async (id: string): Promise<void> => {
+  try {
+    const apiClient = createApiClient();
+    await apiClient.delete(`/users/${id}`);
+  } catch (error) {
+    console.error(
+      `Erreur lors de la suppression de l'utilisateur ${id}:`,
+      error,
+    );
+    throw error;
+  }
+};
+
 // Fonction pour récupérer tous les utilisateurs
 export const fetchUsers = async (): Promise<User[]> => {
   try {

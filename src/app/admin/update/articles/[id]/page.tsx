@@ -20,7 +20,7 @@ const UpdateArticlePage: React.FC = () => {
         if (articleData) {
           setArticle(articleData);
         } else {
-          setError("Article not found");
+          setError('Article not found');
         }
       } catch (err) {
         console.error('Failed to fetch article:', err);

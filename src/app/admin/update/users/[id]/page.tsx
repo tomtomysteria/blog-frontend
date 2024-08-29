@@ -20,7 +20,7 @@ const UpdateUserPage: React.FC = () => {
         if (userData) {
           setUser(userData);
         } else {
-          setError("User not found");
+          setError('User not found');
         }
       } catch (err) {
         console.error('Failed to fetch user:', err);
@@ -45,7 +45,7 @@ const UpdateUserPage: React.FC = () => {
   if (error) {
     return <div className="container mx-auto p-4">{error}</div>;
   }
-  
+
   if (!user) {
     return <div className="container mx-auto p-4">Loading...</div>;
   }

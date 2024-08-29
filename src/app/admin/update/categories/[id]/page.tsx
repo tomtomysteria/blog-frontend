@@ -20,7 +20,7 @@ const UpdateCategoryPage: React.FC = () => {
         if (categoryData) {
           setCategory(categoryData);
         } else {
-          setError("Category not found");
+          setError('Category not found');
         }
       } catch (err) {
         console.error('Failed to fetch category:', err);
