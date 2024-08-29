@@ -9,7 +9,13 @@ export async function POST(request: Request) {
     const response = await axios.post('http://localhost:4000/articles', body);
     return NextResponse.json(response.data, { status: 201 });
   } catch (error: any) {
-    console.error("Erreur lors de la création de l'article:", error.response?.data || error.message);
-    return NextResponse.json({ error: error.response?.data || 'Erreur serveur' }, { status: error.response?.status || 500 });
+    console.error(
+      "Erreur lors de la création de l'article:",
+      error.response?.data || error.message,
+    );
+    return NextResponse.json(
+      { error: error.response?.data || 'Erreur serveur' },
+      { status: error.response?.status || 500 },
+    );
   }
 }

@@ -15,9 +15,7 @@ const RegisterComponent: React.FC = () => {
     }
   };
 
-  return (
-    <UserForm onSubmit={onSubmit} />
-  );
+  return <UserForm onSubmit={onSubmit} />;
 };
 
 export default RegisterComponent;

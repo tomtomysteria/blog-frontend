@@ -10,14 +10,25 @@ type FormValues = {
   name: string;
 };
 
-const CategoryForm: React.FC<CategoryFormProps> = ({ onSubmit, initialData }) => {
-  const { register, handleSubmit, formState: { errors } } = useForm<FormValues>({ defaultValues: initialData });
+const CategoryForm: React.FC<CategoryFormProps> = ({
+  onSubmit,
+  initialData,
+}) => {
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<FormValues>({ defaultValues: initialData });
 
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
       <div>
         <label>Nom de la catégorie:</label>
-        <input {...register('name', { required: 'Le nom de la catégorie est requis' })} />
+        <input
+          {...register('name', {
+            required: 'Le nom de la catégorie est requis',
+          })}
+        />
         {errors.name && <p>{errors.name.message}</p>}
       </div>
       <button type="submit">Enregistrer</button>

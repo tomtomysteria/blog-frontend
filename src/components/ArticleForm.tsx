@@ -14,7 +14,11 @@ type FormValues = {
 };
 
 const ArticleForm: React.FC<ArticleFormProps> = ({ onSubmit, initialData }) => {
-  const { register, handleSubmit, formState: { errors } } = useForm<FormValues>({ defaultValues: initialData });
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<FormValues>({ defaultValues: initialData });
 
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
@@ -25,17 +29,25 @@ const ArticleForm: React.FC<ArticleFormProps> = ({ onSubmit, initialData }) => {
       </div>
       <div>
         <label>Contenu:</label>
-        <textarea {...register('content', { required: 'Le contenu est requis' })} />
+        <textarea
+          {...register('content', { required: 'Le contenu est requis' })}
+        />
         {errors.content && <p>{errors.content.message}</p>}
       </div>
       <div>
         <label>ID de l'auteur:</label>
-        <input {...register('authorId', { required: "L'ID de l'auteur est requis" })} />
+        <input
+          {...register('authorId', { required: "L'ID de l'auteur est requis" })}
+        />
         {errors.authorId && <p>{errors.authorId.message}</p>}
       </div>
       <div>
         <label>ID de la catégorie:</label>
-        <input {...register('categoryId', { required: "L'ID de la catégorie est requis" })} />
+        <input
+          {...register('categoryId', {
+            required: "L'ID de la catégorie est requis",
+          })}
+        />
         {errors.categoryId && <p>{errors.categoryId.message}</p>}
       </div>
       <button type="submit">Enregistrer</button>

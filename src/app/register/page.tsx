@@ -4,7 +4,7 @@ import React from 'react';
 import RegisterComponent from './RegisterComponent';
 
 const RegisterPage = () => {
-    return <RegisterComponent />;
+  return <RegisterComponent />;
 };
 
 export default RegisterPage;
