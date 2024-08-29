@@ -135,6 +135,20 @@ export const updateCategory = async (
   }
 };
 
+// Fonction pour supprimer une catégorie
+export const deleteCategory = async (id: string): Promise<void> => {
+  try {
+    const apiClient = createApiClient();
+    await apiClient.delete(`/categories/${id}`);
+  } catch (error) {
+    console.error(
+      `Erreur lors de la suppression de la catégorie ${id}:`,
+      error,
+    );
+    throw error;
+  }
+};
+
 // Fonction pour récupérer toutes les catégories
 export const fetchCategories = async (): Promise<Category[]> => {
   try {

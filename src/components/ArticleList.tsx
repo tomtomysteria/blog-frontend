@@ -15,10 +15,7 @@ interface ArticleListProps {
   isAdmin?: boolean;
 }
 
-const ArticleList: React.FC<ArticleListProps> = ({
-  articles,
-  isAdmin = false,
-}) => {
+const ArticleList = ({ articles, isAdmin = false }: ArticleListProps) => {
   const router = useRouter();
 
   const handleUpdate = (id: string) => {
