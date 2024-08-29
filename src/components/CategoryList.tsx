@@ -19,7 +19,7 @@ const CategoryList = ({ categories, isAdmin = false }: CategoryListProps) => {
 
   const handleUpdate = (id: string) => {
     // Redirect to the category update page
-    router.push(`/admin/update/categories/${id}`);
+    router.push(`/admin/categories/update/${id}`);
   };
 
   const handleDelete = async (id: string) => {

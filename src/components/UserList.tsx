@@ -20,7 +20,7 @@ const UserList = ({ users, isAdmin = false }: UserListProps) => {
 
   const handleUpdate = (id: string) => {
     // Redirect to the user update page
-    router.push(`/admin/update/users/${id}`);
+    router.push(`/admin/users/update/${id}`);
   };
 
   const handleDelete = async (id: string) => {

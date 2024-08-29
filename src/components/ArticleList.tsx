@@ -20,7 +20,7 @@ const ArticleList = ({ articles, isAdmin = false }: ArticleListProps) => {
 
   const handleUpdate = (id: string) => {
     // Redirect to the article update page
-    router.push(`/admin/update/articles/${id}`);
+    router.push(`/admin/articles/update/${id}`);
   };
 
   const handleDelete = async (id: string) => {
