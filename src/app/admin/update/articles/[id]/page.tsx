@@ -4,7 +4,7 @@ import React from 'react';
 import { useRouter, useParams } from 'next/navigation';
 import { fetchArticleById, updateArticle } from '@/services/api';
 import ArticleForm from '@/components/ArticleForm';
-import { getSingleId } from '@/utils/idUtils';
+import { getSingleId } from '@/utils/identifierUtils';
 
 const UpdateArticlePage: React.FC = () => {
   const { id } = useParams();

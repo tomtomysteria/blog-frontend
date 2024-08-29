@@ -4,7 +4,7 @@ import React from 'react';
 import { useRouter, useParams } from 'next/navigation';
 import { fetchUserById, updateUser } from '@/services/api';
 import UserForm from '@/components/UserForm';
-import { getSingleId } from '@/utils/idUtils';
+import { getSingleId } from '@/utils/identifierUtils';
 
 const UpdateUserPage: React.FC = () => {
   const { id } = useParams();

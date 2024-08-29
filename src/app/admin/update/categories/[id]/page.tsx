@@ -4,7 +4,7 @@ import React from 'react';
 import { useRouter, useParams } from 'next/navigation';
 import { fetchCategoryById, updateCategory } from '@/services/api';
 import CategoryForm from '@/components/CategoryForm';
-import { getSingleId } from '@/utils/idUtils';
+import { getSingleId } from '@/utils/identifierUtils';
 
 const UpdateCategoryPage: React.FC = () => {
   const { id } = useParams();
