@@ -59,7 +59,9 @@ export const fetchArticleById = async (id: string): Promise<Article | null> => {
 };
 
 // Fonction pour créer un article
-export const createArticle = async (articleData: Omit<Article, 'id'>): Promise<Article> => {
+export const createArticle = async (
+  articleData: Omit<Article, 'id'>,
+): Promise<Article> => {
   try {
     const apiClient = createApiClient();
     const res = await apiClient.post<Article>('/articles', articleData);
@@ -71,7 +73,10 @@ export const createArticle = async (articleData: Omit<Article, 'id'>): Promise<A
 };
 
 // Fonction pour mettre à jour un article
-export const updateArticle = async (id: string, articleData: Partial<Article>): Promise<Article> => {
+export const updateArticle = async (
+  id: string,
+  articleData: Partial<Article>,
+): Promise<Article> => {
   try {
     const apiClient = createApiClient();
     const res = await apiClient.put<Article>(`/articles/${id}`, articleData);
@@ -82,6 +87,16 @@ export const updateArticle = async (id: string, articleData: Partial<Article>): 
   }
 };
 
+// Fonction pour supprimer un article
+export const deleteArticle = async (id: string): Promise<void> => {
+  try {
+    const apiClient = createApiClient();
+    await apiClient.delete(`/articles/${id}`);
+  } catch (error) {
+    console.error(`Erreur lors de la suppression de l'article ${id}:`, error);
+    throw error;
+  }
+};
 
 export type Category = {
   id: string;
@@ -89,29 +104,36 @@ export type Category = {
 };
 
 // Fonction pour créer une catégorie
-export const createCategory = async (categoryData: Omit<Category, 'id'>): Promise<Category> => {
+export const createCategory = async (
+  categoryData: Omit<Category, 'id'>,
+): Promise<Category> => {
   try {
     const apiClient = createApiClient();
     const res = await apiClient.post<Category>('/categories', categoryData);
     return res.data;
   } catch (error) {
-    console.error("Erreur lors de la création de la catégorie:", error);
+    console.error('Erreur lors de la création de la catégorie:', error);
     throw error;
   }
 };
 
 // Fonction pour mettre à jour une catégorie
-export const updateCategory = async (id: string, categoryData: Partial<Category>): Promise<Category> => {
+export const updateCategory = async (
+  id: string,
+  categoryData: Partial<Category>,
+): Promise<Category> => {
   try {
     const apiClient = createApiClient();
-    const res = await apiClient.put<Category>(`/categories/${id}`, categoryData);
+    const res = await apiClient.put<Category>(
+      `/categories/${id}`,
+      categoryData,
+    );
     return res.data;
   } catch (error) {
-    console.error("Erreur lors de la mise à jour de la catégorie:", error);
+    console.error('Erreur lors de la mise à jour de la catégorie:', error);
     throw error;
   }
 };
-
 
 // Fonction pour récupérer toutes les catégories
 export const fetchCategories = async (): Promise<Category[]> => {
@@ -126,13 +148,18 @@ export const fetchCategories = async (): Promise<Category[]> => {
 };
 
 // Fonction pour récupérer une catégorie par ID
-export const fetchCategoryById = async (id: string): Promise<Category | null> => {
+export const fetchCategoryById = async (
+  id: string,
+): Promise<Category | null> => {
   try {
     const apiClient = createApiClient();
     const res = await apiClient.get<Category>(`/categories/${id}`);
     return res.data;
   } catch (error) {
-    console.error(`Erreur lors de la récupération de la catégorie ${id}:`, error);
+    console.error(
+      `Erreur lors de la récupération de la catégorie ${id}:`,
+      error,
+    );
     return null;
   }
 };
@@ -150,16 +177,19 @@ export type User = {
 // Fonction pour créer un utilisateur
 export const createUser = async (userData: Omit<User, 'id'>): Promise<User> => {
   try {
-      const apiClient = createApiClient();
-      const response = await apiClient.post<User>('/users', userData);
-      return response.data;
+    const apiClient = createApiClient();
+    const response = await apiClient.post<User>('/users', userData);
+    return response.data;
   } catch (error) {
-      throw new Error('Error creating user');
+    throw new Error('Error creating user');
   }
 };
 
 // Fonction pour mettre à jour un utilisateur
-export const updateUser = async (id: string, userData: Partial<User>): Promise<User> => {
+export const updateUser = async (
+  id: string,
+  userData: Partial<User>,
+): Promise<User> => {
   try {
     const apiClient = createApiClient();
     const res = await apiClient.put<User>(`/users/${id}`, userData);
@@ -169,7 +199,6 @@ export const updateUser = async (id: string, userData: Partial<User>): Promise<U
     throw error;
   }
 };
-
 
 // Fonction pour récupérer tous les utilisateurs
 export const fetchUsers = async (): Promise<User[]> => {
@@ -190,18 +219,24 @@ export const fetchUserById = async (id: string): Promise<User | null> => {
     const res = await apiClient.get<User>(`/users/${id}`);
     return res.data;
   } catch (error) {
-    console.error(`Erreur lors de la récupération de l'utilisateur ${id}:`, error);
+    console.error(
+      `Erreur lors de la récupération de l'utilisateur ${id}:`,
+      error,
+    );
     return null;
   }
 };
 
 export const loginUser = async (identifier: string, password: string) => {
   try {
-      const apiClient = createApiClient(false); // Désactiver l'ajout automatique du token
-      const response = await apiClient.post('/auth/login', { identifier, password });
-      return response.data; // Assuming the response contains the JWT token and user info
+    const apiClient = createApiClient(false); // Désactiver l'ajout automatique du token
+    const response = await apiClient.post('/auth/login', {
+      identifier,
+      password,
+    });
+    return response.data; // Assuming the response contains the JWT token and user info
   } catch (error) {
-      console.error('Failed to login:', error);
-      throw error;
+    console.error('Failed to login:', error);
+    throw error;
   }
 };
