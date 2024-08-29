@@ -55,16 +55,22 @@ const AdminDashboard = () => {
         <h2 className="text-2xl font-semibold mb-4">Quick Actions</h2>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <Link
-            href="/admin/create-article"
+            href="/admin/articles/create"
             className="bg-blue-500 text-white rounded-lg py-3 px-4 text-center"
           >
             Create New Article
           </Link>
           <Link
-            href="/admin/create-category"
+            href="/admin/categories/create"
             className="bg-blue-500 text-white rounded-lg py-3 px-4 text-center"
           >
             Create New Category
+          </Link>
+          <Link
+            href="/admin/users/create"
+            className="bg-blue-500 text-white rounded-lg py-3 px-4 text-center"
+          >
+            Create New User
           </Link>
         </div>
       </div>
