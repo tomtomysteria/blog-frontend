@@ -1,5 +1,5 @@
-import { fetchArticleById } from '../../../services/api';
-import ArticleDetail from '../../../components/ArticleDetail';
+import { fetchArticleById } from '@/services/api';
+import ArticleDetail from '@/components/ArticleDetail';
 
 type ArticleDetailPageProps = {
   params: { id: string };

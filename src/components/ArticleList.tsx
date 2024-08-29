@@ -1,4 +1,4 @@
-import { Article } from '../services/api';
+import { Article } from '@/services/api';
 
 type ArticleListProps = {
   articles: Article[];
@@ -10,7 +10,7 @@ const ArticleList = ({ articles, isAdmin = false }: ArticleListProps) => {
     <ul>
       {articles.map(article => (
         <li key={article.id} className="mt-4">
-          <h2 className="text-2xl">{article.title}</h2>
+          <h3 className="text-2xl">{article.title}</h3>
           <p>{article.content}</p>
           {isAdmin && (
             <div>

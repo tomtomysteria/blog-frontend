@@ -1,15 +1,15 @@
 import { fetchArticles } from '@/services/api';
 import ArticleList from '@/components/ArticleList';
 
-const Home = async () => {
+const ArticleListPage = async () => {
   const articles = await fetchArticles();
 
   return (
     <div className="container mx-auto px-4">
-      <h1 className="text-3xl font-bold">Articles</h1>
-      <ArticleList articles={articles} />
+      <h2 className="text-3xl font-bold">Liste des articles</h2>
+      <ArticleList articles={articles} isAdmin={true} />
     </div>
   );
 };
 
-export default Home;
+export default ArticleListPage;

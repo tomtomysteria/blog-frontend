@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { useAuth } from '../../context/AuthContext';
-import { loginUser } from '../../services/api';
+import { useAuth } from '@/context/AuthContext';
+import { loginUser } from '@/services/api';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 
