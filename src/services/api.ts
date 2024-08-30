@@ -21,10 +21,44 @@ export const createApiClient = (withAuth: boolean = true) => {
       }
       return config;
     });
+
+    apiClient.interceptors.response.use(
+      (response) => response,
+      async (error) => {
+        const originalRequest = error.config;
+        if (error.response.status === 401 && !originalRequest._retry) {
+          originalRequest._retry = true;
+          const refreshToken = localStorage.getItem('refreshToken');
+
+          if (!refreshToken) {
+            throw new Error('No refresh token available, please log in again.');
+          }
+
+          const newTokens = await getNewAccessToken(refreshToken);
+          saveTokens(newTokens);
+          originalRequest.headers['Authorization'] =
+            `Bearer ${newTokens.accessToken}`;
+          return apiClient(originalRequest);
+        }
+        return Promise.reject(error);
+      },
+    );
   }
 
   return apiClient;
 };
+
+async function getNewAccessToken(refreshToken: string) {
+  const response = await createApiClient(false).post('/auth/refresh-token', {
+    refreshToken,
+  });
+  return response.data;
+}
+
+function saveTokens(tokens: { accessToken: string; refreshToken: string }) {
+  localStorage.setItem('accessToken', tokens.accessToken);
+  localStorage.setItem('refreshToken', tokens.refreshToken);
+}
 
 export type Article = {
   id: string;

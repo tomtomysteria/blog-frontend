@@ -2,40 +2,19 @@
 
 import Link from 'next/link';
 import { useAuth } from '@/context/AuthContext';
-import { useEffect, useState } from 'react';
 
 const Navbar = () => {
-  const { token, logout } = useAuth();
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    const storedToken = localStorage.getItem('token');
-    if (storedToken !== null) {
-      setLoading(false);
-    } else {
-      setLoading(false);
-    }
-  }, [token]);
-
-  if (loading) {
-    return (
-      <nav className="flex justify-between p-4 bg-gray-800 text-white">
-        <div>
-          <span className="text-lg font-bold">Loading...</span>
-        </div>
-      </nav>
-    );
-  }
+  const { accessToken, logout } = useAuth();
 
   return (
-    <nav className="flex justify-between p-4 bg-gray-800 text-white">
+    <nav className="flex items-center justify-between p-4 bg-gray-800 text-white mb-4">
       <div>
         <Link href="/">
           <span className="text-lg font-bold">Home</span>
         </Link>
       </div>
       <div>
-        {token ? (
+        {accessToken ? (
           <button onClick={logout}>Logout</button>
         ) : (
           <Link href="/login">

@@ -7,29 +7,28 @@ import Link from 'next/link';
 const LoginComponent: React.FC = () => {
   const [identifier, setIdentifier] = useState('');
   const [password, setPassword] = useState('');
-  const { login, token, role } = useAuth();
+  const { login, accessToken, role } = useAuth();
   const router = useRouter();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
       const data = await loginUser(identifier, password);
-      login(data.token, data.role); // Storing the JWT token and user role in context
+      login(data.accessToken, data.refreshToken, data.role); // Storing the accessToken, refreshToken, and user role in context
     } catch (error) {
       console.error('Login failed:', error);
     }
   };
 
-  // Effect to handle redirection based on role after successful login
   useEffect(() => {
-    if (token && role) {
+    if (accessToken && role) {
       if (role === 'super-admin' || role === 'admin') {
         router.push('/admin'); // Redirect to admin page for super-admin and admin roles
       } else if (role === 'blogger') {
         router.push('/'); // Redirect to home page for blogger role
       }
     }
-  }, [token, role, router]);
+  }, [accessToken, role, router]);
 
   return (
     <form onSubmit={handleSubmit}>

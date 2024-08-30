@@ -9,48 +9,62 @@ import React, {
 } from 'react';
 
 interface AuthContextType {
-  token: string | null;
+  accessToken: string | null;
+  refreshToken: string | null;
   role: string | null;
-  login: (token: string, role: string) => void;
+  login: (accessToken: string, refreshToken: string, role: string) => void;
   logout: () => void;
 }
 
 interface AuthProviderProps {
-  children: ReactNode; // Typing the children prop correctly
+  children: ReactNode;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
-  const [token, setToken] = useState<string | null>(null);
+  const [accessToken, setAccessToken] = useState<string | null>(null);
+  const [refreshToken, setRefreshToken] = useState<string | null>(null);
   const [role, setRole] = useState<string | null>(null);
 
-  // Load token and role from localStorage when the component mounts
+  // Load tokens and role from localStorage when the component mounts
   useEffect(() => {
-    const storedToken = localStorage.getItem('token');
+    const storedAccessToken = localStorage.getItem('accessToken');
+    const storedRefreshToken = localStorage.getItem('refreshToken');
     const storedRole = localStorage.getItem('role');
-    if (storedToken) {
-      setToken(storedToken);
+    if (storedAccessToken) {
+      setAccessToken(storedAccessToken);
+      setRefreshToken(storedRefreshToken);
       setRole(storedRole);
     }
   }, []);
 
-  const login = (newToken: string, userRole: string) => {
-    setToken(newToken);
+  const login = (
+    newAccessToken: string,
+    newRefreshToken: string,
+    userRole: string,
+  ) => {
+    setAccessToken(newAccessToken);
+    setRefreshToken(newRefreshToken);
     setRole(userRole);
-    localStorage.setItem('token', newToken);
-    localStorage.setItem('role', userRole); // Storing role in localStorage
+    localStorage.setItem('accessToken', newAccessToken);
+    localStorage.setItem('refreshToken', newRefreshToken);
+    localStorage.setItem('role', userRole);
   };
 
   const logout = () => {
-    setToken(null);
+    setAccessToken(null);
+    setRefreshToken(null);
     setRole(null);
-    localStorage.removeItem('token');
+    localStorage.removeItem('accessToken');
+    localStorage.removeItem('refreshToken');
     localStorage.removeItem('role');
   };
 
   return (
-    <AuthContext.Provider value={{ token, role, login, logout }}>
+    <AuthContext.Provider
+      value={{ accessToken, refreshToken, role, login, logout }}
+    >
       {children}
     </AuthContext.Provider>
   );
