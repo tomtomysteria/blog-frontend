@@ -1,11 +1,6 @@
 import React from 'react';
 import { useForm, SubmitHandler } from 'react-hook-form';
 
-type ArticleFormProps = {
-  onSubmit: SubmitHandler<FormValues>;
-  initialData?: Partial<FormValues>;
-};
-
 type FormValues = {
   title: string;
   content: string;
@@ -13,12 +8,26 @@ type FormValues = {
   categoryId: string;
 };
 
-const ArticleForm: React.FC<ArticleFormProps> = ({ onSubmit, initialData }) => {
+type ArticleFormProps = {
+  onSubmit: SubmitHandler<FormValues>;
+  authors: { id: string; username: string }[];
+  categories: { id: string; name: string }[];
+  initialData?: Partial<FormValues>; // Ajout de initialData comme prop optionnelle
+};
+
+const ArticleForm: React.FC<ArticleFormProps> = ({
+  onSubmit,
+  authors,
+  categories,
+  initialData,
+}) => {
   const {
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm<FormValues>({ defaultValues: initialData });
+  } = useForm<FormValues>({
+    defaultValues: initialData, // Utilisation de initialData pour définir les valeurs par défaut
+  });
 
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
@@ -35,19 +44,29 @@ const ArticleForm: React.FC<ArticleFormProps> = ({ onSubmit, initialData }) => {
         {errors.content && <p>{errors.content.message}</p>}
       </div>
       <div>
-        <label>ID de l'auteur:</label>
-        <input
-          {...register('authorId', { required: "L'ID de l'auteur est requis" })}
-        />
+        <label>Auteur:</label>
+        <select {...register('authorId', { required: "L'auteur est requis" })}>
+          <option value="">Sélectionnez un auteur</option>
+          {authors.map((author) => (
+            <option key={author.id} value={author.id}>
+              {author.username}
+            </option>
+          ))}
+        </select>
         {errors.authorId && <p>{errors.authorId.message}</p>}
       </div>
       <div>
-        <label>ID de la catégorie:</label>
-        <input
-          {...register('categoryId', {
-            required: "L'ID de la catégorie est requis",
-          })}
-        />
+        <label>Catégorie:</label>
+        <select
+          {...register('categoryId', { required: 'La catégorie est requise' })}
+        >
+          <option value="">Sélectionnez une catégorie</option>
+          {categories.map((category) => (
+            <option key={category.id} value={category.id}>
+              {category.name}
+            </option>
+          ))}
+        </select>
         {errors.categoryId && <p>{errors.categoryId.message}</p>}
       </div>
       <button type="submit">Enregistrer</button>

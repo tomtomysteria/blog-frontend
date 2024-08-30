@@ -1,28 +1,15 @@
-'use client';
-
 import React from 'react';
-import { useRouter } from 'next/navigation';
-import ArticleForm from '@/components/ArticleForm';
-import { createArticle } from '@/services/api';
+import { fetchUsers, fetchCategories } from '@/services/api';
+import CreateArticleClient from './CreateArticleClient';
 
-const CreateArticle: React.FC = () => {
-  const router = useRouter();
-
-  const onSubmit = async (data: any) => {
-    try {
-      await createArticle(data);
-      router.push('/admin');
-    } catch (error) {
-      console.error('Failed to create article:', error);
-    }
-  };
+export default async function CreateArticlePage() {
+  const authors = await fetchUsers();
+  const categories = await fetchCategories();
 
   return (
     <div className="container mx-auto p-4">
       <h1 className="text-2xl font-bold mb-4">Create a New Article</h1>
-      <ArticleForm onSubmit={onSubmit} />
+      <CreateArticleClient authors={authors} categories={categories} />
     </div>
   );
-};
-
-export default CreateArticle;
+}

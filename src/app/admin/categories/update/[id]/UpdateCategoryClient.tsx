@@ -1,0 +1,29 @@
+'use client';
+
+import React from 'react';
+import { useRouter } from 'next/navigation';
+import { updateCategory } from '@/services/api';
+import CategoryForm from '@/components/CategoryForm';
+
+type UpdateCategoryClientProps = {
+  category: { id: string; name: string };
+};
+
+const UpdateCategoryClient: React.FC<UpdateCategoryClientProps> = ({
+  category,
+}) => {
+  const router = useRouter();
+
+  const handleSubmit = async (data: any) => {
+    try {
+      await updateCategory(category.id, data);
+      router.push('/admin/categories');
+    } catch (error) {
+      console.error('Failed to update category:', error);
+    }
+  };
+
+  return <CategoryForm initialData={category} onSubmit={handleSubmit} />;
+};
+
+export default UpdateCategoryClient;

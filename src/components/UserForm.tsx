@@ -3,7 +3,7 @@ import { useForm, SubmitHandler } from 'react-hook-form';
 
 type UserFormProps = {
   onSubmit: SubmitHandler<FormValues>;
-  defaultValues?: Partial<FormValues>;
+  initialData?: Partial<FormValues>;
   isAdmin?: boolean; // Flag to determine if roles should be selectable
 };
 
@@ -19,14 +19,14 @@ type FormValues = {
 
 const UserForm: React.FC<UserFormProps> = ({
   onSubmit,
-  defaultValues,
+  initialData,
   isAdmin = false,
 }) => {
   const {
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm<FormValues>({ defaultValues });
+  } = useForm<FormValues>({ defaultValues: initialData });
 
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
