@@ -17,7 +17,8 @@ const UpdateCategoryClient: React.FC<UpdateCategoryClientProps> = ({
   const handleSubmit = async (data: any) => {
     try {
       await updateCategory(category.id, data);
-      router.push('/admin/categories');
+      router.push('/admin/categories'); // Redirection vers la liste des catégories
+      router.refresh(); // Rafraîchissement pour assurer la mise à jour des données
     } catch (error) {
       console.error('Failed to update category:', error);
     }

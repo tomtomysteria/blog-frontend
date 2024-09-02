@@ -11,7 +11,8 @@ const CreateCategory: React.FC = () => {
   const onSubmit = async (data: any) => {
     try {
       await createCategory(data);
-      router.push('/admin');
+      router.push('/admin/categories'); // Redirection vers la liste des catégories
+      router.refresh(); // Rafraîchissement pour assurer la mise à jour des données
     } catch (error) {
       console.error('Failed to create category:', error);
     }
