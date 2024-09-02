@@ -14,6 +14,7 @@ interface AuthContextType {
   role: string | null;
   login: (accessToken: string, refreshToken: string, role: string) => void;
   logout: () => void;
+  isAuthorized?: (requiredRole: string) => boolean; // Ajout de la méthode pour vérifier les rôles
 }
 
 interface AuthProviderProps {
@@ -61,9 +62,13 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     localStorage.removeItem('role');
   };
 
+  const isAuthorized = (requiredRole: string) => {
+    return role === requiredRole || role === 'super-admin';
+  };
+
   return (
     <AuthContext.Provider
-      value={{ accessToken, refreshToken, role, login, logout }}
+      value={{ accessToken, refreshToken, role, login, logout, isAuthorized }}
     >
       {children}
     </AuthContext.Provider>
