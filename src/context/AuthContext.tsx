@@ -7,6 +7,11 @@ import React, {
   ReactNode,
   useEffect,
 } from 'react';
+import {
+  getStoredItem,
+  setStoredItem,
+  removeStoredItem,
+} from '../utils/localStorageUtils';
 
 interface AuthContextType {
   accessToken: string | null;
@@ -14,7 +19,7 @@ interface AuthContextType {
   role: string | null;
   login: (accessToken: string, refreshToken: string, role: string) => void;
   logout: () => void;
-  isAuthorized?: (requiredRole: string) => boolean; // Ajout de la méthode pour vérifier les rôles
+  isAuthorized?: (requiredRole: string) => boolean;
 }
 
 interface AuthProviderProps {
@@ -30,9 +35,9 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
 
   // Load tokens and role from localStorage when the component mounts
   useEffect(() => {
-    const storedAccessToken = localStorage.getItem('accessToken');
-    const storedRefreshToken = localStorage.getItem('refreshToken');
-    const storedRole = localStorage.getItem('role');
+    const storedAccessToken = getStoredItem('accessToken');
+    const storedRefreshToken = getStoredItem('refreshToken');
+    const storedRole = getStoredItem('role');
     if (storedAccessToken) {
       setAccessToken(storedAccessToken);
       setRefreshToken(storedRefreshToken);
@@ -48,18 +53,18 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     setAccessToken(newAccessToken);
     setRefreshToken(newRefreshToken);
     setRole(userRole);
-    localStorage.setItem('accessToken', newAccessToken);
-    localStorage.setItem('refreshToken', newRefreshToken);
-    localStorage.setItem('role', userRole);
+    setStoredItem('accessToken', newAccessToken);
+    setStoredItem('refreshToken', newRefreshToken);
+    setStoredItem('role', userRole);
   };
 
   const logout = () => {
     setAccessToken(null);
     setRefreshToken(null);
     setRole(null);
-    localStorage.removeItem('accessToken');
-    localStorage.removeItem('refreshToken');
-    localStorage.removeItem('role');
+    removeStoredItem('accessToken');
+    removeStoredItem('refreshToken');
+    removeStoredItem('role');
   };
 
   const isAuthorized = (requiredRole: string) => {

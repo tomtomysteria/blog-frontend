@@ -1,4 +1,5 @@
 import axios from 'axios';
+import { getStoredItem, setStoredItem } from '../utils/localStorageUtils';
 
 // Créer une instance Axios avec un interceptor pour ajouter le token JWT
 export const createApiClient = (withAuth: boolean = true) => {
@@ -13,11 +14,9 @@ export const createApiClient = (withAuth: boolean = true) => {
   // Ajouter un interceptor pour inclure le token JWT dans l'en-tête Authorization, sauf si withAuth est false
   if (withAuth) {
     apiClient.interceptors.request.use((config) => {
-      if (typeof window !== 'undefined') {
-        const token = localStorage.getItem('token');
-        if (token) {
-          config.headers.Authorization = `Bearer ${token}`;
-        }
+      const token = getStoredItem('token');
+      if (token) {
+        config.headers.Authorization = `Bearer ${token}`;
       }
       return config;
     });
@@ -28,14 +27,15 @@ export const createApiClient = (withAuth: boolean = true) => {
         const originalRequest = error.config;
         if (error.response.status === 401 && !originalRequest._retry) {
           originalRequest._retry = true;
-          const refreshToken = localStorage.getItem('refreshToken');
+          const refreshToken = getStoredItem('refreshToken');
 
           if (!refreshToken) {
             throw new Error('No refresh token available, please log in again.');
           }
 
           const newTokens = await getNewAccessToken(refreshToken);
-          saveTokens(newTokens);
+          setStoredItem('accessToken', newTokens.accessToken);
+          setStoredItem('refreshToken', newTokens.refreshToken);
           originalRequest.headers['Authorization'] =
             `Bearer ${newTokens.accessToken}`;
           return apiClient(originalRequest);
@@ -53,11 +53,6 @@ async function getNewAccessToken(refreshToken: string) {
     refreshToken,
   });
   return response.data;
-}
-
-function saveTokens(tokens: { accessToken: string; refreshToken: string }) {
-  localStorage.setItem('accessToken', tokens.accessToken);
-  localStorage.setItem('refreshToken', tokens.refreshToken);
 }
 
 export type Article = {
