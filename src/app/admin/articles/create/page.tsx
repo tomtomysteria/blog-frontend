@@ -1,5 +1,6 @@
 import React from 'react';
-import { fetchUsers, fetchCategories } from '@/services/api';
+import { fetchUsers } from '@/services/userService';
+import { fetchCategories } from '@/services/categoryService';
 import CreateArticleClient from './CreateArticleClient';
 
 export default async function CreateArticlePage() {

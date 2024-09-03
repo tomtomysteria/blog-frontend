@@ -3,7 +3,7 @@
 import React from 'react';
 import { useRouter } from 'next/navigation';
 import CategoryForm from '@/components/CategoryForm';
-import { createCategory } from '@/services/api';
+import { createCategory } from '@/services/categoryService';
 
 const CreateCategory: React.FC = () => {
   const router = useRouter();

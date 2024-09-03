@@ -2,7 +2,7 @@
 
 import React from 'react';
 import { useRouter } from 'next/navigation';
-import { createArticle } from '@/services/api';
+import { createArticle } from '@/services/articleService';
 import ArticleForm from '@/components/ArticleForm';
 
 type CreateArticleClientProps = {

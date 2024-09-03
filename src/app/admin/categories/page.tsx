@@ -1,4 +1,4 @@
-import { fetchCategories } from '@/services/api';
+import { fetchCategories } from '@/services/categoryService';
 import CategoryList from '@/components/CategoryList';
 
 const CategoryListPage = async () => {

@@ -2,7 +2,7 @@
 
 import React from 'react';
 import { useRouter } from 'next/navigation';
-import { updateUser } from '@/services/api';
+import { updateUser } from '@/services/userService';
 import UserForm from '@/components/UserForm';
 
 type UpdateUserClientProps = {

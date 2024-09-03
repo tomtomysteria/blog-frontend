@@ -2,7 +2,7 @@
 
 import React from 'react';
 import { useRouter } from 'next/navigation';
-import { updateCategory } from '@/services/api';
+import { updateCategory } from '@/services/categoryService';
 import CategoryForm from '@/components/CategoryForm';
 
 type UpdateCategoryClientProps = {
