@@ -14,9 +14,11 @@ export const createApiClient = (withAuth: boolean = true) => {
   // Ajouter un interceptor pour inclure le token JWT dans l'en-tête Authorization, sauf si withAuth est false
   if (withAuth) {
     apiClient.interceptors.request.use((config) => {
-      const token = getStoredItem('token');
+      const token = getStoredItem('accessToken');
       if (token) {
         config.headers.Authorization = `Bearer ${token}`;
+      } else {
+        console.warn('No token found in localStorage');
       }
       return config;
     });
