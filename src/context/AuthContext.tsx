@@ -12,6 +12,7 @@ import {
   setStoredItem,
   removeStoredItem,
 } from '../utils/localStorageUtils';
+import { setCookie, getCookie } from 'cookies-next';
 
 interface AuthContextType {
   accessToken: string | null;
@@ -33,11 +34,16 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   const [refreshToken, setRefreshToken] = useState<string | null>(null);
   const [role, setRole] = useState<string | null>(null);
 
-  // Load tokens and role from localStorage when the component mounts
+  // Load tokens and role from localStorage or cookies when the component mounts
   useEffect(() => {
-    const storedAccessToken = getStoredItem('accessToken');
-    const storedRefreshToken = getStoredItem('refreshToken');
-    const storedRole = getStoredItem('role');
+    let storedAccessToken = (getStoredItem('accessToken') ||
+      getCookie('accessToken')) as string | null;
+    let storedRefreshToken = (getStoredItem('refreshToken') ||
+      getCookie('refreshToken')) as string | null;
+    let storedRole = (getStoredItem('role') || getCookie('role')) as
+      | string
+      | null;
+
     if (storedAccessToken) {
       setAccessToken(storedAccessToken);
       setRefreshToken(storedRefreshToken);
@@ -56,6 +62,11 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     setStoredItem('accessToken', newAccessToken);
     setStoredItem('refreshToken', newRefreshToken);
     setStoredItem('role', userRole);
+
+    // Also set cookies for server-side access
+    setCookie('accessToken', newAccessToken);
+    setCookie('refreshToken', newRefreshToken);
+    setCookie('role', userRole);
   };
 
   const logout = () => {
@@ -65,6 +76,11 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     removeStoredItem('accessToken');
     removeStoredItem('refreshToken');
     removeStoredItem('role');
+
+    // Remove cookies on logout by setting expiration date in the past
+    setCookie('accessToken', '', { expires: new Date(0) });
+    setCookie('refreshToken', '', { expires: new Date(0) });
+    setCookie('role', '', { expires: new Date(0) });
   };
 
   const isAuthorized = (requiredRole: string) => {

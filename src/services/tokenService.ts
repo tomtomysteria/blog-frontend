@@ -1,6 +1,7 @@
 import { AxiosInstance } from 'axios';
 import { createApiClient } from './apiClient';
 import { getStoredItem, setStoredItem } from '../utils/localStorageUtils';
+import { getCookie } from 'cookies-next';
 
 export async function getNewAccessToken(refreshToken: string) {
   const response = await createApiClient(false).post('/auth/refresh-token', {
@@ -16,7 +17,10 @@ export function setupTokenInterceptors(apiClient: AxiosInstance) {
       const originalRequest = error.config;
       if (error.response.status === 401 && !originalRequest._retry) {
         originalRequest._retry = true;
-        const refreshToken = getStoredItem('refreshToken');
+        let refreshToken = getStoredItem('refreshToken');
+        if (!refreshToken) {
+          refreshToken = getCookie('refreshToken') as string | null; // Fall back to cookies if refresh token is not in localStorage
+        }
 
         if (!refreshToken) {
           throw new Error('No refresh token available, please log in again.');
