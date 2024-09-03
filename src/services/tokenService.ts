@@ -1,3 +1,4 @@
+import { AxiosInstance } from 'axios';
 import { createApiClient } from './apiClient';
 import { getStoredItem, setStoredItem } from '../utils/localStorageUtils';
 
@@ -8,7 +9,7 @@ export async function getNewAccessToken(refreshToken: string) {
   return response.data;
 }
 
-export function setupTokenInterceptors(apiClient) {
+export function setupTokenInterceptors(apiClient: AxiosInstance) {
   apiClient.interceptors.response.use(
     (response) => response,
     async (error) => {
