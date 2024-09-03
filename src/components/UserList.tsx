@@ -1,6 +1,6 @@
 'use client';
 
-import { deleteUser } from '../services/api';
+import { deleteUser } from '@/services/userService';
 import { useRouter } from 'next/navigation';
 import React from 'react';
 
