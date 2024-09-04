@@ -7,18 +7,20 @@ import React, {
   ReactNode,
   useEffect,
 } from 'react';
+import { login as serverLogin } from '@/app/actions/authActions';
+import { refreshToken as refreshAuthToken } from '@/app/actions/tokenActions';
 import {
   getStoredItem,
   setStoredItem,
   removeStoredItem,
-} from '../utils/localStorageUtils';
-import { setCookie, getCookie } from 'cookies-next';
+} from '@/utils/cookiesUtils.client';
+import { useRouter } from 'next/navigation';
 
 interface AuthContextType {
   accessToken: string | null;
   refreshToken: string | null;
   role: string | null;
-  login: (accessToken: string, refreshToken: string, role: string) => void;
+  login: (identifier: string, password: string) => Promise<void>;
   logout: () => void;
   isAuthorized?: (requiredRole: string) => boolean;
 }
@@ -30,73 +32,104 @@ interface AuthProviderProps {
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
-  const [accessToken, setAccessToken] = useState<string | null>(null);
-  const [refreshToken, setRefreshToken] = useState<string | null>(null);
+  const [accessToken, setAccessToken] = useState<string | null>(
+    getStoredItem('accessToken') as string | null,
+  );
+  const [refreshToken, setRefreshToken] = useState<string | null>(
+    getStoredItem('refreshToken') as string | null,
+  );
   const [role, setRole] = useState<string | null>(null);
+  const router = useRouter(); // Utiliser le router pour la redirection
 
-  // Load tokens and role from localStorage or cookies when the component mounts
-  useEffect(() => {
-    let storedAccessToken = (getStoredItem('accessToken') ||
-      getCookie('accessToken')) as string | null;
-    let storedRefreshToken = (getStoredItem('refreshToken') ||
-      getCookie('refreshToken')) as string | null;
-    let storedRole = (getStoredItem('role') || getCookie('role')) as
-      | string
-      | null;
+  const handleLogin = async (identifier: string, password: string) => {
+    try {
+      const {
+        accessToken,
+        refreshToken,
+        role: userRole,
+      } = await serverLogin(identifier, password);
 
-    if (storedAccessToken) {
-      setAccessToken(storedAccessToken);
-      setRefreshToken(storedRefreshToken);
-      setRole(storedRole);
+      // Stocker les tokens dans les cookies
+      setStoredItem('accessToken', accessToken);
+      setStoredItem('refreshToken', refreshToken);
+      setStoredItem('role', userRole);
+
+      setAccessToken(accessToken);
+      setRefreshToken(refreshToken);
+      setRole(userRole);
+
+      // Redirection en fonction du rôle de l'utilisateur
+      if (userRole === 'super-admin' || userRole === 'admin') {
+        router.push('/admin');
+      } else if (userRole === 'blogger') {
+        router.push('/');
+      }
+    } catch (error) {
+      console.error('Login failed:', error);
     }
-  }, []);
-
-  const login = (
-    newAccessToken: string,
-    newRefreshToken: string,
-    userRole: string,
-  ) => {
-    setAccessToken(newAccessToken);
-    setRefreshToken(newRefreshToken);
-    setRole(userRole);
-    setStoredItem('accessToken', newAccessToken);
-    setStoredItem('refreshToken', newRefreshToken);
-    setStoredItem('role', userRole);
-
-    // Also set cookies for server-side access
-    setCookie('accessToken', newAccessToken);
-    setCookie('refreshToken', newRefreshToken);
-    setCookie('role', userRole);
   };
 
-  const logout = () => {
+  const handleLogout = () => {
     setAccessToken(null);
     setRefreshToken(null);
     setRole(null);
+
+    // Supprimer les cookies
     removeStoredItem('accessToken');
     removeStoredItem('refreshToken');
     removeStoredItem('role');
 
-    // Remove cookies on logout by setting expiration date in the past
-    setCookie('accessToken', '', { expires: new Date(0) });
-    setCookie('refreshToken', '', { expires: new Date(0) });
-    setCookie('role', '', { expires: new Date(0) });
+    router.push('/login');
   };
 
   const isAuthorized = (requiredRole: string) => {
-    return role === requiredRole || role === 'super-admin';
+    return role === requiredRole;
   };
+
+  useEffect(() => {
+    const initializeAuth = async () => {
+      const existingRefreshToken = getStoredItem('refreshToken');
+
+      if (existingRefreshToken) {
+        try {
+          const { accessToken, refreshToken: newRefreshToken } =
+            await refreshAuthToken();
+          if (accessToken) {
+            setAccessToken(accessToken);
+            setStoredItem('accessToken', accessToken);
+          }
+          if (newRefreshToken) {
+            setRefreshToken(newRefreshToken);
+            setStoredItem('refreshToken', newRefreshToken);
+          }
+        } catch (error) {
+          console.error('Failed to refresh token on load:', error);
+        }
+      } else {
+        console.log('No refresh token found, user is not logged in.');
+      }
+    };
+
+    initializeAuth();
+  }, []);
 
   return (
     <AuthContext.Provider
-      value={{ accessToken, refreshToken, role, login, logout, isAuthorized }}
+      value={{
+        accessToken,
+        refreshToken,
+        role,
+        login: handleLogin,
+        logout: handleLogout,
+        isAuthorized,
+      }}
     >
       {children}
     </AuthContext.Provider>
   );
 };
 
-export const useAuth = (): AuthContextType => {
+export const useAuth = () => {
   const context = useContext(AuthContext);
   if (context === undefined) {
     throw new Error('useAuth must be used within an AuthProvider');
