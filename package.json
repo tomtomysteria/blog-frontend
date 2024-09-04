@@ -12,7 +12,7 @@
     "@tailwindcss/forms": "^0.5.7",
     "@tailwindcss/typography": "^0.5.14",
     "axios": "^1.7.3",
-    "cookies-next": "^4.2.1",
+    "js-cookie": "^3.0.5",
     "next": "14.2.5",
     "radix-ui": "^1.0.1",
     "react": "^18",
@@ -21,6 +21,7 @@
     "ui": "shadcn/ui"
   },
   "devDependencies": {
+    "@types/js-cookie": "^3.0.6",
     "@types/json5": "^2.2.0",
     "@types/node": "^20",
     "@types/react": "^18",
