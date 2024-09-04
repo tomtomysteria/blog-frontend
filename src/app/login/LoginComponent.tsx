@@ -1,31 +1,38 @@
 import React, { useState, useEffect } from 'react';
 import { useAuth } from '@/context/AuthContext';
-import { loginUser } from '@/services/authService';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 
 const LoginComponent: React.FC = () => {
   const [identifier, setIdentifier] = useState('');
   const [password, setPassword] = useState('');
-  const { login, accessToken, role } = useAuth();
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const { login, accessToken, role } = useAuth(); // Récupérer la fonction login et les tokens
   const router = useRouter();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    setLoading(true);
+    setError(null);
     try {
-      const data = await loginUser(identifier, password);
-      login(data.accessToken, data.refreshToken, data.role); // Storing the accessToken, refreshToken, and user role in context
+      // Appel à la fonction `login` du contexte pour effectuer la connexion
+      await login(identifier, password);
+      // La gestion des tokens et du rôle est effectuée dans le contexte
     } catch (error) {
-      console.error('Login failed:', error);
+      setError('Login failed. Please check your credentials.');
+    } finally {
+      setLoading(false);
     }
   };
 
+  // Redirection si l'utilisateur est déjà connecté
   useEffect(() => {
     if (accessToken && role) {
       if (role === 'super-admin' || role === 'admin') {
-        router.push('/admin'); // Redirect to admin page for super-admin and admin roles
+        router.push('/admin'); // Redirection pour les admins
       } else if (role === 'blogger') {
-        router.push('/'); // Redirect to home page for blogger role
+        router.push('/'); // Redirection pour les bloggers
       }
     }
   }, [accessToken, role, router]);
@@ -50,7 +57,10 @@ const LoginComponent: React.FC = () => {
           required
         />
       </div>
-      <button type="submit">Login</button>
+      {error && <div className="error-message">{error}</div>}
+      <button type="submit" disabled={loading}>
+        {loading ? 'Logging in...' : 'Login'}
+      </button>
       <p>
         Don't have an account? <Link href="/register">Sign up here</Link>
       </p>
