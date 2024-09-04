@@ -1,26 +1,28 @@
 import axios from 'axios';
-import { getStoredItem } from '../utils/cookiesUtils.server';
 
-export const createApiServer = (withAuth: boolean = true) => {
-  const apiServer = axios.create({
+export const createBaseApiClient = (
+  getStoredItem: (key: string) => string | null,
+  withAuth: boolean = true,
+) => {
+  const apiClient = axios.create({
     baseURL: process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3000',
     headers: {
       'Content-Type': 'application/json',
     },
-    withCredentials: true, // Assure que les cookies sont envoyés avec les requêtes côté serveur
+    withCredentials: true, // Assure l'envoi des cookies
   });
 
   if (withAuth) {
-    apiServer.interceptors.request.use((config) => {
+    apiClient.interceptors.request.use((config) => {
       const token = getStoredItem('accessToken');
       if (token) {
         config.headers.Authorization = `Bearer ${token}`; // Ajoute le token au header Authorization
       } else {
-        console.warn('No token found in cookies in server side');
+        console.warn('No token found for authorization');
       }
       return config;
     });
   }
 
-  return apiServer;
+  return apiClient;
 };
