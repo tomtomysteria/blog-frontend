@@ -10,9 +10,6 @@ export async function refreshToken(): Promise<{
 }> {
   const refreshToken = getStoredItem('refreshToken');
 
-  console.log('Attempting to refresh token.');
-  console.log('Refresh Token from cookies:', refreshToken);
-
   if (!refreshToken) {
     throw new Error('No refresh token found');
   }
