@@ -1,26 +1,31 @@
-import { AxiosInstance } from 'axios';
+import { AxiosInstance, AxiosError } from 'axios';
 import { createApiClient } from './apiClient';
-import { getStoredItem, setStoredItem } from '../utils/localStorageUtils';
-import { getCookie } from 'cookies-next';
+import { getStoredItem, setStoredItem } from '../utils/cookiesUtils.client';
 
 export async function getNewAccessToken(refreshToken: string) {
-  const response = await createApiClient(false).post('/auth/refresh-token', {
-    refreshToken,
-  });
-  return response.data;
+  try {
+    const response = await createApiClient(false).post('/auth/refresh-token', {
+      refreshToken,
+    });
+    return response.data;
+  } catch (error: AxiosError | any) {
+    if (error.isAxiosError && error.response) {
+      console.error('Failed to refresh token:', error.response.data);
+    } else {
+      console.error('Failed to refresh token:', error.message);
+    }
+    throw error;
+  }
 }
 
 export function setupTokenInterceptors(apiClient: AxiosInstance) {
   apiClient.interceptors.response.use(
     (response) => response,
-    async (error) => {
+    async (error: AxiosError | any) => {
       const originalRequest = error.config;
-      if (error.response.status === 401 && !originalRequest._retry) {
+      if (error.response?.status === 401 && !originalRequest._retry) {
         originalRequest._retry = true;
         let refreshToken = getStoredItem('refreshToken');
-        if (!refreshToken) {
-          refreshToken = getCookie('refreshToken') as string | null; // Fall back to cookies if refresh token is not in localStorage
-        }
 
         if (!refreshToken) {
           throw new Error('No refresh token available, please log in again.');
