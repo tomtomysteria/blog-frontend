@@ -24,6 +24,7 @@ const UpdateArticleClient: React.FC<UpdateArticleClientProps> = ({
     try {
       await updateArticle(article.id, data);
       router.push('/admin/articles');
+      router.refresh(); // Rafraîchissement pour assurer la mise à jour des données
     } catch (error) {
       console.error('Failed to update article:', error);
     }

@@ -11,7 +11,8 @@ const CreateUser: React.FC = () => {
   const onSubmit = async (data: any) => {
     try {
       await createUser(data);
-      router.push('/admin');
+      router.push('/admin/users');
+      router.refresh(); // Rafraîchissement pour assurer la mise à jour des données
     } catch (error) {
       console.error('Failed to create user:', error);
     }

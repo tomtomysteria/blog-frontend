@@ -16,6 +16,7 @@ const UpdateUserClient: React.FC<UpdateUserClientProps> = ({ user }) => {
     try {
       await updateUser(user.id, data);
       router.push('/admin/users');
+      router.refresh(); // Rafraîchissement pour assurer la mise à jour des données
     } catch (error) {
       console.error('Failed to update user:', error);
     }
