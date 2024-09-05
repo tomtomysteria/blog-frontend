@@ -1,4 +1,4 @@
-import { fetchUsers } from '@/services/userService';
+import { fetchUsers } from '@/services/resources/userService';
 import UserList from '@/components/UserList';
 
 const UserListPage = async () => {

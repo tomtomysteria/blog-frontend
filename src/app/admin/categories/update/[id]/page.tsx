@@ -1,5 +1,5 @@
 import React from 'react';
-import { fetchCategoryById } from '@/services/categoryService';
+import { fetchCategoryById } from '@/services/resources/categoryService';
 import UpdateCategoryClient from './UpdateCategoryClient';
 
 export default async function UpdateCategoryPage({

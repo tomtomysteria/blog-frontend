@@ -1,6 +1,6 @@
 'use client';
 
-import { deleteArticle } from '@/services/articleService';
+import { deleteArticle } from '@/services/resources/articleService';
 import { useRouter } from 'next/navigation';
 import React from 'react';
 

@@ -1,4 +1,4 @@
-import { fetchArticles } from '@/services/articleService';
+import { fetchArticles } from '@/services/resources/articleService';
 import ArticleList from '@/components/ArticleList';
 
 const ArticleListPage = async () => {

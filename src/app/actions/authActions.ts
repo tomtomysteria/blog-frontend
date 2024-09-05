@@ -1,7 +1,7 @@
 'use server';
 
 import { setStoredItem } from '@/utils/cookiesUtils.server';
-import { loginUser } from '@/services/authService';
+import { loginUser } from '@/services/auth/authService';
 import { AxiosError } from 'axios';
 
 export async function login(identifier: string, password: string) {

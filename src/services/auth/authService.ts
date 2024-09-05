@@ -1,5 +1,5 @@
 import { AxiosError } from 'axios';
-import { createApiClient } from './apiClient';
+import { createApiClient } from '../apiClient';
 
 export const loginUser = async (identifier: string, password: string) => {
   try {

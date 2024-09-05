@@ -1,6 +1,6 @@
 'use server';
 
-import { createApiClient } from './apiClient';
+import { createApiClient } from '../apiClient';
 
 export type Article = {
   id: string;

@@ -1,7 +1,7 @@
 'use server';
 
 import { getStoredItem, setStoredItem } from '@/utils/cookiesUtils.server';
-import { getNewAccessToken } from '@/services/tokenService';
+import { getNewAccessToken } from '@/services/auth/tokenService';
 import { AxiosError } from 'axios';
 
 export async function refreshToken(): Promise<{

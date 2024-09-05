@@ -1,4 +1,4 @@
-import { fetchArticleById } from '@/services/articleService';
+import { fetchArticleById } from '@/services/resources/articleService';
 import ArticleDetail from '@/components/ArticleDetail';
 
 type ArticleDetailPageProps = {

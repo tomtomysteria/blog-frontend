@@ -2,7 +2,7 @@
 
 import React from 'react';
 import { useRouter } from 'next/navigation';
-import { updateArticle } from '@/services/articleService';
+import { updateArticle } from '@/services/resources/articleService';
 import ArticleForm from '@/components/ArticleForm';
 
 type UpdateArticleClientProps = {

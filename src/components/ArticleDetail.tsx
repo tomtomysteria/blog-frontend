@@ -1,4 +1,4 @@
-import { Article } from '@/services/articleService';
+import { Article } from '@/services/resources/articleService';
 
 type ArticleDetailProps = {
   article: Article;

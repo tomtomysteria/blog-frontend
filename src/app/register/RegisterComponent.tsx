@@ -1,7 +1,7 @@
 import React from 'react';
 import { useRouter } from 'next/navigation';
 import UserForm from '@/components/UserForm';
-import { createUser } from '@/services/userService';
+import { createUser } from '@/services/resources/userService';
 
 const RegisterComponent: React.FC = () => {
   const router = useRouter();
