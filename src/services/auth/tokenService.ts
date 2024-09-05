@@ -1,5 +1,5 @@
-import { AxiosError } from 'axios';
 import { createApiClient } from '../apiClient';
+import { handleAxiosError } from '@/utils/errorUtils';
 
 export async function getNewAccessToken(refreshToken: string) {
   try {
@@ -7,12 +7,7 @@ export async function getNewAccessToken(refreshToken: string) {
       refreshToken,
     });
     return response.data;
-  } catch (error: AxiosError | any) {
-    if (error.isAxiosError && error.response) {
-      console.error('Failed to refresh token:', error.response.data);
-    } else {
-      console.error('Failed to refresh token:', error.message);
-    }
-    throw error;
+  } catch (error) {
+    throw handleAxiosError(error);
   }
 }

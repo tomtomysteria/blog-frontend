@@ -2,7 +2,7 @@
 
 import { getStoredItem, setStoredItem } from '@/utils/cookiesUtils.server';
 import { getNewAccessToken } from '@/services/auth/tokenService';
-import { AxiosError } from 'axios';
+import { handleAxiosError } from '@/utils/errorUtils';
 
 export async function refreshToken(): Promise<{
   accessToken: string;
@@ -26,13 +26,7 @@ export async function refreshToken(): Promise<{
     }
 
     return { accessToken, refreshToken: newRefreshToken || refreshToken };
-  } catch (error: AxiosError | any) {
-    // Typage avec AxiosError et type générique any
-    if (error.isAxiosError && error.response) {
-      console.error('Token refresh failed:', error.response.data);
-    } else {
-      console.error('Token refresh failed:', error.message);
-    }
-    throw error; // Relancer l'erreur après capture
+  } catch (error) {
+    throw handleAxiosError(error);
   }
 }

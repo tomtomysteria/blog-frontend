@@ -2,7 +2,7 @@
 
 import { setStoredItem } from '@/utils/cookiesUtils.server';
 import { loginUser } from '@/services/auth/authService';
-import { AxiosError } from 'axios';
+import { handleAxiosError } from '@/utils/errorUtils';
 
 export async function login(identifier: string, password: string) {
   try {
@@ -16,15 +16,7 @@ export async function login(identifier: string, password: string) {
     setStoredItem('role', role);
 
     return { accessToken, refreshToken, role };
-  } catch (error: AxiosError | any) {
-    if (error.isAxiosError && error.response) {
-      console.error('Login failed:', error.response.data);
-    } else {
-      console.error('Login failed:', error.message);
-    }
-    throw new Error(
-      error.response?.data?.message ||
-        'Login failed. Please check your credentials and try again.',
-    );
+  } catch (error) {
+    throw handleAxiosError(error);
   }
 }

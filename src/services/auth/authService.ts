@@ -1,5 +1,5 @@
-import { AxiosError } from 'axios';
 import { createApiClient } from '../apiClient';
+import { handleAxiosError } from '@/utils/errorUtils';
 
 export const loginUser = async (identifier: string, password: string) => {
   try {
@@ -11,13 +11,7 @@ export const loginUser = async (identifier: string, password: string) => {
     });
 
     return response.data;
-  } catch (error: AxiosError | any) {
-    // Utilisation d'AxiosError pour un typage strict
-    if (error.isAxiosError && error.response) {
-      console.error('Failed to login:', error.response.data);
-    } else {
-      console.error('Failed to login:', error.message);
-    }
-    throw error; // Relancer l'erreur après l'avoir capturée
+  } catch (error) {
+    throw handleAxiosError(error);
   }
 };

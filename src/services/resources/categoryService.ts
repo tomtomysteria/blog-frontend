@@ -1,5 +1,6 @@
 'use server';
 
+import { handleAxiosError, handleAxiosLog } from '@/utils/errorUtils';
 import { createApiClient } from '../apiClient';
 
 export type Category = {
@@ -16,8 +17,7 @@ export const createCategory = async (
     const res = await apiClient.post<Category>('/categories', categoryData);
     return res.data;
   } catch (error) {
-    console.error('Erreur lors de la création de la catégorie:', error);
-    throw error;
+    throw handleAxiosError(error);
   }
 };
 
@@ -34,8 +34,7 @@ export const updateCategory = async (
     );
     return res.data;
   } catch (error) {
-    console.error('Erreur lors de la mise à jour de la catégorie:', error);
-    throw error;
+    throw handleAxiosError(error);
   }
 };
 
@@ -45,11 +44,7 @@ export const deleteCategory = async (id: string): Promise<void> => {
     const apiClient = createApiClient();
     await apiClient.delete(`/categories/${id}`);
   } catch (error) {
-    console.error(
-      `Erreur lors de la suppression de la catégorie ${id}:`,
-      error,
-    );
-    throw error;
+    throw handleAxiosError(error);
   }
 };
 
@@ -60,7 +55,7 @@ export const fetchCategories = async (): Promise<Category[]> => {
     const res = await apiClient.get<Category[]>('/categories');
     return res.data;
   } catch (error) {
-    console.error('Erreur lors de la récupération des catégories:', error);
+    handleAxiosLog(error);
     return [];
   }
 };
@@ -74,10 +69,7 @@ export const fetchCategoryById = async (
     const res = await apiClient.get<Category>(`/categories/${id}`);
     return res.data;
   } catch (error) {
-    console.error(
-      `Erreur lors de la récupération de la catégorie ${id}:`,
-      error,
-    );
+    handleAxiosLog(error);
     return null;
   }
 };
