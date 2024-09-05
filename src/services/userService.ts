@@ -1,3 +1,5 @@
+'use server';
+
 import { createApiClient } from './apiClient';
 
 export type User = {
