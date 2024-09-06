@@ -21,9 +21,10 @@ const Navbar = () => {
         <Image
           src="/images/logo.png" // Chemin vers l'image dans le dossier public
           alt="Logo"
-          width={50} // Largeur de l'image (peut être ajusté)
-          height={50} // Hauteur de l'image (peut être ajusté)
+          width={50} // Largeur de l'image
+          height={50} // Hauteur de l'image
           priority // Priorité au chargement pour le logo
+          className="w-auto h-auto"
         />
         <span className="text-lg font-bold ml-2">Home</span>
       </Link>
