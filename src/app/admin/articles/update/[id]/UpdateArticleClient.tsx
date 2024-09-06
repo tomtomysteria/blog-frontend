@@ -20,7 +20,7 @@ const UpdateArticleClient: React.FC<UpdateArticleClientProps> = ({
 }) => {
   const router = useRouter();
 
-  const handleSubmit = async (data: any) => {
+  const onSubmit = async (data: any) => {
     try {
       await updateArticle(article.id, data);
       router.push('/admin/articles');
@@ -33,7 +33,7 @@ const UpdateArticleClient: React.FC<UpdateArticleClientProps> = ({
   return (
     <ArticleForm
       initialData={article}
-      onSubmit={handleSubmit}
+      onSubmit={onSubmit}
       authors={[{ id: article.authorId, username: 'Author' }]}
       categories={[{ id: article.categoryId, name: 'Category' }]}
     />

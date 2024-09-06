@@ -14,7 +14,7 @@ const UpdateCategoryClient: React.FC<UpdateCategoryClientProps> = ({
 }) => {
   const router = useRouter();
 
-  const handleSubmit = async (data: any) => {
+  const onSubmit = async (data: any) => {
     try {
       await updateCategory(category.id, data);
       router.push('/admin/categories'); // Redirection vers la liste des catégories
@@ -24,7 +24,7 @@ const UpdateCategoryClient: React.FC<UpdateCategoryClientProps> = ({
     }
   };
 
-  return <CategoryForm initialData={category} onSubmit={handleSubmit} />;
+  return <CategoryForm initialData={category} onSubmit={onSubmit} />;
 };
 
 export default UpdateCategoryClient;

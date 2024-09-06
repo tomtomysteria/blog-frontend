@@ -16,7 +16,7 @@ const CreateArticleClient: React.FC<CreateArticleClientProps> = ({
 }) => {
   const router = useRouter();
 
-  const handleSubmit = async (data: any) => {
+  const onSubmit = async (data: any) => {
     try {
       await createArticle(data);
       router.push('/admin/articles');
@@ -30,7 +30,7 @@ const CreateArticleClient: React.FC<CreateArticleClientProps> = ({
     <ArticleForm
       authors={authors}
       categories={categories}
-      onSubmit={handleSubmit}
+      onSubmit={onSubmit}
     />
   );
 };

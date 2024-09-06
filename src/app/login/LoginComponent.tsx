@@ -11,7 +11,7 @@ const LoginComponent: React.FC = () => {
   const { login, accessToken, role } = useAuth(); // Récupérer la fonction login et les tokens
   const router = useRouter();
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const onSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
     setError(null);
@@ -38,7 +38,7 @@ const LoginComponent: React.FC = () => {
   }, [accessToken, role, router]);
 
   return (
-    <form onSubmit={handleSubmit}>
+    <form onSubmit={onSubmit}>
       <div>
         <label>Username or Email:</label>
         <input

@@ -12,7 +12,7 @@ type UpdateUserClientProps = {
 const UpdateUserClient: React.FC<UpdateUserClientProps> = ({ user }) => {
   const router = useRouter();
 
-  const handleSubmit = async (data: any) => {
+  const onSubmit = async (data: any) => {
     try {
       await updateUser(user.id, data);
       router.push('/admin/users');
@@ -22,7 +22,7 @@ const UpdateUserClient: React.FC<UpdateUserClientProps> = ({ user }) => {
     }
   };
 
-  return <UserForm initialData={user} onSubmit={handleSubmit} />;
+  return <UserForm initialData={user} onSubmit={onSubmit} />;
 };
 
 export default UpdateUserClient;
