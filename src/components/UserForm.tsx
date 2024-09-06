@@ -14,7 +14,7 @@ type FormValues = {
   username: string;
   password: string;
   role: string;
-  birthdate: string;
+  birthdate: string | null; // Allow birthdate to be null
 };
 
 const UserForm: React.FC<UserFormProps> = ({
@@ -26,10 +26,22 @@ const UserForm: React.FC<UserFormProps> = ({
     register,
     handleSubmit,
     formState: { errors },
+    getValues,
   } = useForm<FormValues>({ defaultValues: initialData });
 
+  const handleFormSubmit: SubmitHandler<FormValues> = (data) => {
+    const values = getValues();
+
+    // Set birthdate to null if it's an empty string
+    if (!values.birthdate) {
+      values.birthdate = null;
+    }
+
+    onSubmit(values);
+  };
+
   return (
-    <form onSubmit={handleSubmit(onSubmit)}>
+    <form onSubmit={handleSubmit(handleFormSubmit)}>
       <div>
         <label>First Name:</label>
         <input
