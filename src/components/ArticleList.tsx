@@ -1,8 +1,9 @@
 'use client';
 
-import { deleteArticle } from '@/services/resources/articleService';
-import { useRouter } from 'next/navigation';
 import React from 'react';
+import { useRouter } from 'next/navigation';
+import DOMPurify from 'dompurify'; // Import DOMPurify for sanitizing HTML
+import { deleteArticle } from '@/services/resources/articleService';
 
 interface Article {
   id: string;
@@ -40,9 +41,14 @@ const ArticleList = ({ articles, isAdmin = false }: ArticleListProps) => {
       {articles.map((article) => (
         <li key={article.id} className="mt-4">
           <h3 className="text-2xl">{article.title}</h3>
-          <p>{article.content}</p>
+          {/* Nettoyer et afficher le contenu HTML sécurisé */}
+          <div
+            dangerouslySetInnerHTML={{
+              __html: DOMPurify.sanitize(article.content),
+            }}
+          />
           {isAdmin && (
-            <div>
+            <div className="mt-2">
               <button onClick={() => handleUpdate(article.id)}>Edit</button>
               <button onClick={() => handleDelete(article.id)}>Delete</button>
             </div>

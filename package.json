@@ -11,16 +11,20 @@
   "dependencies": {
     "@tailwindcss/forms": "^0.5.7",
     "@tailwindcss/typography": "^0.5.14",
+    "@tiptap/extension-image": "^2.6.6",
+    "@tiptap/extension-link": "^2.6.6",
+    "@tiptap/react": "^2.6.6",
+    "@tiptap/starter-kit": "^2.6.6",
     "axios": "^1.7.3",
+    "dompurify": "^3.1.6",
     "js-cookie": "^3.0.5",
     "next": "14.2.5",
-    "radix-ui": "^1.0.1",
     "react": "^18",
     "react-dom": "^18",
-    "react-hook-form": "^7.52.2",
-    "ui": "shadcn/ui"
+    "react-hook-form": "^7.52.2"
   },
   "devDependencies": {
+    "@types/dompurify": "^3.0.5",
     "@types/js-cookie": "^3.0.6",
     "@types/json5": "^2.2.0",
     "@types/node": "^20",

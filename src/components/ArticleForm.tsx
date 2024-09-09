@@ -1,5 +1,6 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useForm, SubmitHandler } from 'react-hook-form';
+import Editor from '@/components/Editor';
 
 type FormValues = {
   title: string;
@@ -29,18 +30,24 @@ const ArticleForm: React.FC<ArticleFormProps> = ({
     defaultValues: initialData, // Utilisation de initialData pour définir les valeurs par défaut
   });
 
+  // Ajouter un état pour gérer le contenu de l'éditeur
+  const [content, setContent] = useState<string>(initialData?.content || '');
+
+  const handleFormSubmit: SubmitHandler<FormValues> = (data) => {
+    onSubmit({ ...data, content }); // Envoyer le contenu de l'éditeur avec le reste du formulaire
+  };
+
   return (
-    <form onSubmit={handleSubmit(onSubmit)}>
+    <form onSubmit={handleSubmit(handleFormSubmit)}>
       <div>
         <label>Titre:</label>
         <input {...register('title', { required: 'Le titre est requis' })} />
         {errors.title && <p>{errors.title.message}</p>}
       </div>
-      <div>
+      <div className="my-5">
         <label>Contenu:</label>
-        <textarea
-          {...register('content', { required: 'Le contenu est requis' })}
-        />
+        {/* Remplacer le textarea par l'éditeur Tiptap */}
+        <Editor content={content} onContentChange={setContent} />
         {errors.content && <p>{errors.content.message}</p>}
       </div>
       <div>
