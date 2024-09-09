@@ -4,6 +4,7 @@ import React from 'react';
 import { useRouter } from 'next/navigation';
 import DOMPurify from 'dompurify'; // Import DOMPurify for sanitizing HTML
 import { deleteArticle } from '@/services/resources/articleService';
+import { Button } from './ui/button';
 
 interface Article {
   id: string;
@@ -49,8 +50,18 @@ const ArticleList = ({ articles, isAdmin = false }: ArticleListProps) => {
           />
           {isAdmin && (
             <div className="mt-2">
-              <button onClick={() => handleUpdate(article.id)}>Edit</button>
-              <button onClick={() => handleDelete(article.id)}>Delete</button>
+              <Button
+                onClick={() => handleUpdate(article.id)}
+                className="bg-blue-600 hover:bg-blue-500 mr-2"
+              >
+                Edit
+              </Button>
+              <Button
+                onClick={() => handleDelete(article.id)}
+                variant="destructive"
+              >
+                Delete
+              </Button>
             </div>
           )}
         </li>
