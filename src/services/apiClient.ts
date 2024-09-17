@@ -1,11 +1,8 @@
 import axios from 'axios';
-import { getNewAccessToken } from '../auth/tokenService';
+import { getNewAccessToken } from './auth/tokenService';
+import { getStoredItem, setStoredItem } from '@/utils/cookiesUtils.server';
 
-export const createBaseApiClient = (
-  getStoredItem: (key: string) => string | null,
-  setStoredItem: (key: string, value: string) => void,
-  withAuth: boolean = true,
-) => {
+export const createApiClient = (withAuth: boolean = true) => {
   const apiClient = axios.create({
     baseURL: process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3000',
     headers: {
