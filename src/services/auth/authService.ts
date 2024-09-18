@@ -1,11 +1,9 @@
-import { createApiClient } from '../apiClient';
+import { apiClientWithoutAuth } from '../api-client/backend';
 import { handleAxiosError } from '@/utils/errorUtils';
 
 export const loginUser = async (identifier: string, password: string) => {
   try {
-    const apiClient = createApiClient(false);
-
-    const response = await apiClient.post('/auth/login', {
+    const response = await apiClientWithoutAuth.post('/auth/login', {
       identifier,
       password,
     });

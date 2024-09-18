@@ -1,7 +1,7 @@
 'use server';
 
 import { handleAxiosError, handleAxiosLog } from '@/utils/errorUtils';
-import { createApiClient } from '../apiClient';
+import { apiClient } from '../api-client/backend';
 
 export type Category = {
   id: string;
@@ -13,7 +13,6 @@ export const createCategory = async (
   categoryData: Omit<Category, 'id'>,
 ): Promise<Category> => {
   try {
-    const apiClient = createApiClient();
     const res = await apiClient.post<Category>('/categories', categoryData);
     return res.data;
   } catch (error) {
@@ -27,7 +26,6 @@ export const updateCategory = async (
   categoryData: Partial<Category>,
 ): Promise<Category> => {
   try {
-    const apiClient = createApiClient();
     const res = await apiClient.put<Category>(
       `/categories/${id}`,
       categoryData,
@@ -41,7 +39,6 @@ export const updateCategory = async (
 // Fonction pour supprimer une catégorie
 export const deleteCategory = async (id: string): Promise<void> => {
   try {
-    const apiClient = createApiClient();
     await apiClient.delete(`/categories/${id}`);
   } catch (error) {
     throw handleAxiosError(error);
@@ -51,7 +48,6 @@ export const deleteCategory = async (id: string): Promise<void> => {
 // Fonction pour récupérer toutes les catégories
 export const fetchCategories = async (): Promise<Category[]> => {
   try {
-    const apiClient = createApiClient();
     const res = await apiClient.get<Category[]>('/categories');
     return res.data;
   } catch (error) {
@@ -65,7 +61,6 @@ export const fetchCategoryById = async (
   id: string,
 ): Promise<Category | null> => {
   try {
-    const apiClient = createApiClient();
     const res = await apiClient.get<Category>(`/categories/${id}`);
     return res.data;
   } catch (error) {

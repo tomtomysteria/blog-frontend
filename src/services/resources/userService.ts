@@ -1,6 +1,6 @@
 'use server';
 
-import { createApiClient } from '../apiClient';
+import { apiClient } from '../api-client/backend';
 import { handleAxiosError, handleAxiosLog } from '@/utils/errorUtils';
 
 export type User = {
@@ -16,7 +16,6 @@ export type User = {
 // Fonction pour créer un utilisateur
 export const createUser = async (userData: Omit<User, 'id'>): Promise<User> => {
   try {
-    const apiClient = createApiClient();
     const res = await apiClient.post<User>('/users', userData);
     return res.data;
   } catch (error) {
@@ -30,7 +29,6 @@ export const updateUser = async (
   userData: Partial<User>,
 ): Promise<User> => {
   try {
-    const apiClient = createApiClient();
     const res = await apiClient.put<User>(`/users/${id}`, userData);
     return res.data;
   } catch (error) {
@@ -41,7 +39,6 @@ export const updateUser = async (
 // Fonction pour supprimer un utilisateur
 export const deleteUser = async (id: string): Promise<void> => {
   try {
-    const apiClient = createApiClient();
     await apiClient.delete(`/users/${id}`);
   } catch (error) {
     throw handleAxiosError(error);
@@ -51,7 +48,6 @@ export const deleteUser = async (id: string): Promise<void> => {
 // Fonction pour récupérer tous les utilisateurs
 export const fetchUsers = async (): Promise<User[]> => {
   try {
-    const apiClient = createApiClient();
     const res = await apiClient.get<User[]>('/users');
     return res.data;
   } catch (error) {
@@ -63,7 +59,6 @@ export const fetchUsers = async (): Promise<User[]> => {
 // Fonction pour récupérer un utilisateur par ID
 export const fetchUserById = async (id: string): Promise<User | null> => {
   try {
-    const apiClient = createApiClient();
     const res = await apiClient.get<User>(`/users/${id}`);
     return res.data;
   } catch (error) {

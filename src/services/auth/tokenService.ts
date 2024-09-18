@@ -1,9 +1,9 @@
-import { createApiClient } from '../apiClient';
+import { apiClientWithoutAuth } from '../api-client/backend';
 import { handleAxiosError } from '@/utils/errorUtils';
 
 export async function getNewAccessToken(refreshToken: string) {
   try {
-    const response = await createApiClient(false).post('/auth/refresh-token', {
+    const response = await apiClientWithoutAuth.post('/auth/refresh-token', {
       refreshToken,
     });
     return response.data;
