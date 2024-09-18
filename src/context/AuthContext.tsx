@@ -8,12 +8,11 @@ import React, {
   useEffect,
 } from 'react';
 import { login as serverLogin } from '@/app/actions/authActions';
-import { refreshToken as refreshAuthToken } from '@/app/actions/tokenActions';
 import {
-  getStoredItem,
-  setStoredItem,
-  removeStoredItem,
-} from '@/utils/cookiesUtils.client';
+  getServerCookieApiRoute,
+  setServerCookieApiRoute,
+  removeServerCookieApiRoute,
+} from '@/services/api-routes/cookiesApi';
 import { useRouter } from 'next/navigation';
 
 interface AuthContextType {
@@ -32,15 +31,13 @@ interface AuthProviderProps {
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
-  const [accessToken, setAccessToken] = useState<string | null>(
-    getStoredItem('accessToken') as string | null,
-  );
-  const [refreshToken, setRefreshToken] = useState<string | null>(
-    getStoredItem('refreshToken') as string | null,
-  );
+  const [accessToken, setAccessToken] = useState<string | null>(null);
+  const [refreshToken, setRefreshToken] = useState<string | null>(null);
   const [role, setRole] = useState<string | null>(null);
+  const [loading, setLoading] = useState<boolean>(true);
   const router = useRouter(); // Utiliser le router pour la redirection
 
+  // Fonction de login
   const handleLogin = async (identifier: string, password: string) => {
     try {
       const {
@@ -49,11 +46,12 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
         role: userRole,
       } = await serverLogin(identifier, password);
 
-      // Stocker les tokens dans les cookies
-      setStoredItem('accessToken', accessToken);
-      setStoredItem('refreshToken', refreshToken);
-      setStoredItem('role', userRole);
+      // Définir les cookies via les API Routes
+      await setServerCookieApiRoute('accessToken', accessToken);
+      await setServerCookieApiRoute('refreshToken', refreshToken);
+      await setServerCookieApiRoute('role', userRole);
 
+      // Mettre à jour l'état
       setAccessToken(accessToken);
       setRefreshToken(refreshToken);
       setRole(userRole);
@@ -69,49 +67,58 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     }
   };
 
-  const handleLogout = () => {
+  // Fonction de logout
+  const handleLogout = async () => {
+    // Supprimer les cookies via les API Routes
+    await removeServerCookieApiRoute('accessToken');
+    await removeServerCookieApiRoute('refreshToken');
+    await removeServerCookieApiRoute('role');
+
+    // Réinitialiser l'état
     setAccessToken(null);
     setRefreshToken(null);
     setRole(null);
 
-    // Supprimer les cookies
-    removeStoredItem('accessToken');
-    removeStoredItem('refreshToken');
-    removeStoredItem('role');
-
     router.push('/login');
   };
 
+  // Vérification d'autorisation basée sur le rôle
   const isAuthorized = (requiredRole: string) => {
     return role === requiredRole;
   };
 
+  // Initialisation de l'authentification à partir des cookies via les API Routes
   useEffect(() => {
     const initializeAuth = async () => {
-      const existingRefreshToken = getStoredItem('refreshToken');
+      try {
+        const storedAccessToken = await getServerCookieApiRoute('accessToken');
+        const storedRefreshToken =
+          await getServerCookieApiRoute('refreshToken');
+        const storedRole = await getServerCookieApiRoute('role');
 
-      if (existingRefreshToken) {
-        try {
-          const { accessToken, refreshToken: newRefreshToken } =
-            await refreshAuthToken();
-          if (accessToken) {
-            setAccessToken(accessToken);
-            setStoredItem('accessToken', accessToken);
-          }
-          if (newRefreshToken) {
-            setRefreshToken(newRefreshToken);
-            setStoredItem('refreshToken', newRefreshToken);
-          }
-        } catch (error) {
-          console.error('Failed to refresh token on load:', error);
+        if (storedAccessToken) {
+          setAccessToken(storedAccessToken);
         }
-      } else {
-        console.log('No refresh token found, user is not logged in.');
+        if (storedRefreshToken) {
+          setRefreshToken(storedRefreshToken);
+        }
+        if (storedRole) {
+          setRole(storedRole);
+        }
+      } catch (error) {
+        console.error('Failed to initialize authentication:', error);
+      } finally {
+        setLoading(false); // Met fin à l'état de chargement
       }
     };
 
     initializeAuth();
   }, []);
+
+  // Si en cours de chargement, on peut afficher un écran de chargement
+  if (loading) {
+    return <div>Loading...</div>; // Tu peux personnaliser cet écran de chargement
+  }
 
   return (
     <AuthContext.Provider
@@ -129,6 +136,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   );
 };
 
+// Hook personnalisé pour accéder au contexte Auth
 export const useAuth = () => {
   const context = useContext(AuthContext);
   if (context === undefined) {
