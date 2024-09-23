@@ -1,5 +1,5 @@
 import { apiClientWithoutAuth } from '../api-client/backend';
-import { handleAxiosError } from '@/utils/errorUtils';
+import { handleError } from '@/utils/errorUtils';
 
 export async function getNewAccessToken(refreshToken: string) {
   try {
@@ -8,6 +8,6 @@ export async function getNewAccessToken(refreshToken: string) {
     });
     return response.data;
   } catch (error) {
-    throw handleAxiosError(error);
+    throw handleError(error);
   }
 }

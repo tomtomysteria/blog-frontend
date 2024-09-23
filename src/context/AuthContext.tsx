@@ -14,6 +14,7 @@ import {
   removeServerCookieApiRoute,
 } from '@/services/api-routes/cookiesApi';
 import { useRouter } from 'next/navigation';
+import { handleError } from '@/utils/errorUtils';
 
 interface AuthContextType {
   accessToken: string | null;
@@ -63,7 +64,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
         router.push('/');
       }
     } catch (error) {
-      console.error('Login failed:', error);
+      throw handleError(error);
     }
   };
 

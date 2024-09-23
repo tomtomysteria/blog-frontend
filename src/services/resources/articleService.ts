@@ -1,6 +1,6 @@
 'use server';
 
-import { handleAxiosError, handleAxiosLog } from '@/utils/errorUtils';
+import { handleError, handleErrorLog } from '@/utils/errorUtils';
 import { apiClient } from '../api-client/backend';
 
 export type Article = {
@@ -19,7 +19,7 @@ export const createArticle = async (
     const res = await apiClient.post<Article>('/articles', articleData);
     return res.data;
   } catch (error) {
-    throw handleAxiosError(error);
+    throw handleError(error);
   }
 };
 
@@ -32,7 +32,7 @@ export const updateArticle = async (
     const res = await apiClient.put<Article>(`/articles/${id}`, articleData);
     return res.data;
   } catch (error) {
-    throw handleAxiosError(error);
+    throw handleError(error);
   }
 };
 
@@ -41,7 +41,7 @@ export const deleteArticle = async (id: string): Promise<void> => {
   try {
     await apiClient.delete(`/articles/${id}`);
   } catch (error) {
-    throw handleAxiosError(error);
+    throw handleError(error);
   }
 };
 
@@ -51,7 +51,7 @@ export const fetchArticles = async (): Promise<Article[]> => {
     const res = await apiClient.get<Article[]>('/articles');
     return res.data;
   } catch (error) {
-    handleAxiosLog(error);
+    handleErrorLog(error);
     return [];
   }
 };
@@ -62,7 +62,7 @@ export const fetchArticleById = async (id: string): Promise<Article | null> => {
     const res = await apiClient.get<Article>(`/articles/${id}`);
     return res.data;
   } catch (error) {
-    handleAxiosLog(error);
+    handleErrorLog(error);
     return null;
   }
 };

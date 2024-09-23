@@ -1,6 +1,6 @@
 'use server';
 
-import { handleAxiosError, handleAxiosLog } from '@/utils/errorUtils';
+import { handleError, handleErrorLog } from '@/utils/errorUtils';
 import { apiClient } from '../api-client/backend';
 
 export type Category = {
@@ -16,7 +16,7 @@ export const createCategory = async (
     const res = await apiClient.post<Category>('/categories', categoryData);
     return res.data;
   } catch (error) {
-    throw handleAxiosError(error);
+    throw handleError(error);
   }
 };
 
@@ -32,7 +32,7 @@ export const updateCategory = async (
     );
     return res.data;
   } catch (error) {
-    throw handleAxiosError(error);
+    throw handleError(error);
   }
 };
 
@@ -41,7 +41,7 @@ export const deleteCategory = async (id: string): Promise<void> => {
   try {
     await apiClient.delete(`/categories/${id}`);
   } catch (error) {
-    throw handleAxiosError(error);
+    throw handleError(error);
   }
 };
 
@@ -51,7 +51,7 @@ export const fetchCategories = async (): Promise<Category[]> => {
     const res = await apiClient.get<Category[]>('/categories');
     return res.data;
   } catch (error) {
-    handleAxiosLog(error);
+    handleErrorLog(error);
     return [];
   }
 };
@@ -64,7 +64,7 @@ export const fetchCategoryById = async (
     const res = await apiClient.get<Category>(`/categories/${id}`);
     return res.data;
   } catch (error) {
-    handleAxiosLog(error);
+    handleErrorLog(error);
     return null;
   }
 };

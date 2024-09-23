@@ -1,7 +1,7 @@
 'use server';
 
 import { loginUser } from '@/services/auth/authService';
-import { handleAxiosError } from '@/utils/errorUtils';
+import { handleError } from '@/utils/errorUtils';
 
 export async function login(identifier: string, password: string) {
   try {
@@ -12,6 +12,6 @@ export async function login(identifier: string, password: string) {
 
     return { accessToken, refreshToken, role };
   } catch (error) {
-    throw handleAxiosError(error);
+    throw handleError(error);
   }
 }

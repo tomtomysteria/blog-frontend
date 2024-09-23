@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useAuth } from '@/context/AuthContext';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
+import { handleError } from '@/utils/errorUtils';
 
 const LoginComponent: React.FC = () => {
   const [identifier, setIdentifier] = useState('');
@@ -21,6 +22,7 @@ const LoginComponent: React.FC = () => {
       // La gestion des tokens et du rôle est effectuée dans le contexte
     } catch (error) {
       setError('Login failed. Please check your credentials.');
+      throw handleError(error);
     } finally {
       setLoading(false);
     }

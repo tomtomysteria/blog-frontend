@@ -5,7 +5,7 @@ import {
   setStoredItemApiRoute,
 } from '@/utils/cookiesUtils.server';
 import { getNewAccessToken } from '@/services/auth/tokenService';
-import { handleAxiosError } from '@/utils/errorUtils';
+import { handleError } from '@/utils/errorUtils';
 
 export async function refreshToken(): Promise<{
   accessToken: string;
@@ -34,6 +34,6 @@ export async function refreshToken(): Promise<{
     // Retourne les nouveaux tokens
     return { accessToken, refreshToken: newRefreshToken || refreshToken };
   } catch (error) {
-    throw handleAxiosError(error);
+    throw handleError(error);
   }
 }

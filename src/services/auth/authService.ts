@@ -1,5 +1,5 @@
 import { apiClientWithoutAuth } from '../api-client/backend';
-import { handleAxiosError } from '@/utils/errorUtils';
+import { handleError } from '@/utils/errorUtils';
 
 export const loginUser = async (identifier: string, password: string) => {
   try {
@@ -10,6 +10,6 @@ export const loginUser = async (identifier: string, password: string) => {
 
     return response.data;
   } catch (error) {
-    throw handleAxiosError(error);
+    throw handleError(error);
   }
 };

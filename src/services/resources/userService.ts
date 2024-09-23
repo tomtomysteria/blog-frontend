@@ -1,7 +1,7 @@
 'use server';
 
 import { apiClient } from '../api-client/backend';
-import { handleAxiosError, handleAxiosLog } from '@/utils/errorUtils';
+import { handleError, handleErrorLog } from '@/utils/errorUtils';
 
 export type User = {
   id: string;
@@ -19,7 +19,7 @@ export const createUser = async (userData: Omit<User, 'id'>): Promise<User> => {
     const res = await apiClient.post<User>('/users', userData);
     return res.data;
   } catch (error) {
-    throw handleAxiosError(error);
+    throw handleError(error);
   }
 };
 
@@ -32,7 +32,7 @@ export const updateUser = async (
     const res = await apiClient.put<User>(`/users/${id}`, userData);
     return res.data;
   } catch (error) {
-    throw handleAxiosError(error);
+    throw handleError(error);
   }
 };
 
@@ -41,7 +41,7 @@ export const deleteUser = async (id: string): Promise<void> => {
   try {
     await apiClient.delete(`/users/${id}`);
   } catch (error) {
-    throw handleAxiosError(error);
+    throw handleError(error);
   }
 };
 
@@ -51,7 +51,7 @@ export const fetchUsers = async (): Promise<User[]> => {
     const res = await apiClient.get<User[]>('/users');
     return res.data;
   } catch (error) {
-    handleAxiosLog(error);
+    handleErrorLog(error);
     return [];
   }
 };
@@ -62,7 +62,7 @@ export const fetchUserById = async (id: string): Promise<User | null> => {
     const res = await apiClient.get<User>(`/users/${id}`);
     return res.data;
   } catch (error) {
-    handleAxiosLog(error);
+    handleErrorLog(error);
     return null;
   }
 };
