@@ -15,7 +15,7 @@ type FormValues = {
   username: string;
   password: string;
   role: string;
-  birthdate: string | null; // Allow birthdate to be null
+  birthdate: string;
 };
 
 const UserForm: React.FC<UserFormProps> = ({
@@ -28,22 +28,24 @@ const UserForm: React.FC<UserFormProps> = ({
     register,
     handleSubmit,
     formState: { errors },
-    getValues,
+    // getValues,
   } = useForm<FormValues>({ defaultValues: initialData });
 
-  const handleFormSubmit: SubmitHandler<FormValues> = (data) => {
-    const values = getValues();
+  // Plus nécessaire puisque la transformation est traitée dans le backend
+  // const handleFormSubmit: SubmitHandler<FormValues> = (data) => {
+  //   const values = getValues();
 
-    // Set birthdate to null if it's an empty string
-    if (!values.birthdate) {
-      values.birthdate = null;
-    }
+  //   // Set birthdate to null if it's an empty string
+  //   if (!values.birthdate) {
+  //     values.birthdate = null;
+  //   }
 
-    onSubmit(values);
-  };
+  //   onSubmit(values);
+  // };
 
   return (
-    <form onSubmit={handleSubmit(handleFormSubmit)}>
+    // Utiliser handleFormSubmit à la place de onSubmit directement pour transformer les données si besoin
+    <form onSubmit={handleSubmit(onSubmit)}>
       <div>
         <label>First Name:</label>
         <input
