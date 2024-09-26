@@ -1,19 +1,22 @@
 import React, { useState } from 'react';
-import { useForm, SubmitHandler } from 'react-hook-form';
+import { useForm, SubmitHandler, Controller } from 'react-hook-form';
 import Editor from '@/components/Editor';
+import { User } from '@/services/resources/userService';
+import { Category } from '@/services/resources/categoryService';
+import { Article } from '@/services/resources/articleService';
 
 type FormValues = {
   title: string;
   content: string;
-  authorId: string;
-  categoryId: string;
+  author: string;
+  category: string;
 };
 
 type ArticleFormProps = {
   onSubmit: SubmitHandler<FormValues>;
-  authors: { id: string; username: string }[];
-  categories: { id: string; name: string }[];
-  initialData?: Partial<FormValues>; // Ajout de initialData comme prop optionnelle
+  authors: User[];
+  categories: Category[];
+  initialData?: Partial<Article>;
 };
 
 const ArticleForm: React.FC<ArticleFormProps> = ({
@@ -24,10 +27,16 @@ const ArticleForm: React.FC<ArticleFormProps> = ({
 }) => {
   const {
     register,
+    control,
     handleSubmit,
     formState: { errors },
   } = useForm<FormValues>({
-    defaultValues: initialData, // Utilisation de initialData pour définir les valeurs par défaut
+    defaultValues: {
+      title: initialData?.title || '',
+      content: initialData?.content || '',
+      author: initialData?.author?.id || '', // Utilisation de l'ID de l'auteur
+      category: initialData?.category?.id || '', // Utilisation de l'ID de la catégorie
+    },
   });
 
   // Ajouter un état pour gérer le contenu de l'éditeur
@@ -52,29 +61,41 @@ const ArticleForm: React.FC<ArticleFormProps> = ({
       </div>
       <div>
         <label>Auteur:</label>
-        <select {...register('authorId', { required: "L'auteur est requis" })}>
-          <option value="">Sélectionnez un auteur</option>
-          {authors.map((author) => (
-            <option key={author.id} value={author.id}>
-              {author.username}
-            </option>
-          ))}
-        </select>
-        {errors.authorId && <p>{errors.authorId.message}</p>}
+        <Controller
+          name="author"
+          control={control}
+          rules={{ required: "L'auteur est requis" }}
+          render={({ field }) => (
+            <select {...field}>
+              <option value="">Sélectionnez un auteur</option>
+              {authors.map((author) => (
+                <option key={author.id} value={author.id}>
+                  {author.username}
+                </option>
+              ))}
+            </select>
+          )}
+        />
+        {errors.author && <p>{errors.author.message}</p>}
       </div>
       <div>
         <label>Catégorie:</label>
-        <select
-          {...register('categoryId', { required: 'La catégorie est requise' })}
-        >
-          <option value="">Sélectionnez une catégorie</option>
-          {categories.map((category) => (
-            <option key={category.id} value={category.id}>
-              {category.name}
-            </option>
-          ))}
-        </select>
-        {errors.categoryId && <p>{errors.categoryId.message}</p>}
+        <Controller
+          name="category"
+          control={control}
+          rules={{ required: 'La catégorie est requise' }}
+          render={({ field }) => (
+            <select {...field}>
+              <option value="">Sélectionnez une catégorie</option>
+              {categories.map((category) => (
+                <option key={category.id} value={category.id}>
+                  {category.name}
+                </option>
+              ))}
+            </select>
+          )}
+        />
+        {errors.category && <p>{errors.category.message}</p>}
       </div>
       <button type="submit">Enregistrer</button>
     </form>

@@ -1,24 +1,42 @@
 'use client';
 
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { updateArticle } from '@/services/resources/articleService';
+import { Article, updateArticle } from '@/services/resources/articleService';
 import ArticleForm from '@/components/ArticleForm';
+import {
+  Category,
+  fetchCategories,
+} from '@/services/resources/categoryService';
+import { fetchUsers, User } from '@/services/resources/userService';
 
 type UpdateArticleClientProps = {
-  article: {
-    id: string;
-    title: string;
-    content: string;
-    authorId: string;
-    categoryId: string;
-  };
+  article: Article;
 };
 
 const UpdateArticleClient: React.FC<UpdateArticleClientProps> = ({
   article,
 }) => {
   const router = useRouter();
+  const [authors, setAuthors] = useState<User[]>([]);
+  const [categories, setCategories] = useState<Category[]>([]);
+
+  // Récupérer les auteurs et catégories lors du montage du composant
+  useEffect(() => {
+    async function loadData() {
+      try {
+        const [fetchedAuthors, fetchedCategories] = await Promise.all([
+          fetchUsers(),
+          fetchCategories(),
+        ]);
+        setAuthors(fetchedAuthors);
+        setCategories(fetchedCategories);
+      } catch (error) {
+        console.error('Failed to fetch authors or categories:', error);
+      }
+    }
+    loadData();
+  }, []);
 
   const onSubmit = async (data: any) => {
     try {
@@ -34,8 +52,8 @@ const UpdateArticleClient: React.FC<UpdateArticleClientProps> = ({
     <ArticleForm
       initialData={article}
       onSubmit={onSubmit}
-      authors={[{ id: article.authorId, username: 'Author' }]}
-      categories={[{ id: article.categoryId, name: 'Category' }]}
+      authors={authors}
+      categories={categories}
     />
   );
 };

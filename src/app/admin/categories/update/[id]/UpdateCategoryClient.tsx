@@ -2,11 +2,11 @@
 
 import React from 'react';
 import { useRouter } from 'next/navigation';
-import { updateCategory } from '@/services/resources/categoryService';
+import { Category, updateCategory } from '@/services/resources/categoryService';
 import CategoryForm from '@/components/CategoryForm';
 
 type UpdateCategoryClientProps = {
-  category: { id: string; name: string };
+  category: Category;
 };
 
 const UpdateCategoryClient: React.FC<UpdateCategoryClientProps> = ({

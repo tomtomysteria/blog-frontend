@@ -2,13 +2,15 @@
 
 import { handleError, handleErrorLog } from '@/utils/errorUtils';
 import { apiClient } from '../api-client/backend';
+import { User } from './userService';
+import { Category } from './categoryService';
 
 export type Article = {
   id: string;
   title: string;
   content: string;
-  authorId: string;
-  categoryId: string;
+  author: User;
+  category: Category;
 };
 
 // Fonction pour créer un article

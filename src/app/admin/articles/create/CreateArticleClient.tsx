@@ -4,10 +4,12 @@ import React from 'react';
 import { useRouter } from 'next/navigation';
 import { createArticle } from '@/services/resources/articleService';
 import ArticleForm from '@/components/ArticleForm';
+import { User } from '@/services/resources/userService';
+import { Category } from '@/services/resources/categoryService';
 
 type CreateArticleClientProps = {
-  authors: { id: string; username: string }[];
-  categories: { id: string; name: string }[];
+  authors: User[];
+  categories: Category[];
 };
 
 const CreateArticleClient: React.FC<CreateArticleClientProps> = ({
