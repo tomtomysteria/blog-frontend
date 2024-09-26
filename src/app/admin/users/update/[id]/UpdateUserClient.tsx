@@ -2,11 +2,11 @@
 
 import React from 'react';
 import { useRouter } from 'next/navigation';
-import { updateUser } from '@/services/resources/userService';
+import { updateUser, User } from '@/services/resources/userService';
 import UserForm from '@/components/UserForm';
 
 type UpdateUserClientProps = {
-  user: { id: string; username: string; email: string };
+  user: User;
 };
 
 const UpdateUserClient: React.FC<UpdateUserClientProps> = ({ user }) => {
@@ -22,7 +22,7 @@ const UpdateUserClient: React.FC<UpdateUserClientProps> = ({ user }) => {
     }
   };
 
-  return <UserForm initialData={user} onSubmit={onSubmit} />;
+  return <UserForm initialData={user} onSubmit={onSubmit} isAdmin={true} />;
 };
 
 export default UpdateUserClient;

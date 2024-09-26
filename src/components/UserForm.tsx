@@ -5,6 +5,7 @@ type UserFormProps = {
   onSubmit: SubmitHandler<FormValues>;
   initialData?: Partial<FormValues>;
   isAdmin?: boolean; // Flag to determine if roles should be selectable
+  isCreating?: boolean; // Flag to determine if it's a creation or an update
 };
 
 type FormValues = {
@@ -21,6 +22,7 @@ const UserForm: React.FC<UserFormProps> = ({
   onSubmit,
   initialData,
   isAdmin = false,
+  isCreating = false,
 }) => {
   const {
     register,
@@ -77,8 +79,9 @@ const UserForm: React.FC<UserFormProps> = ({
         <label>Password:</label>
         <input
           type="password"
+          placeholder="Mot de passe"
           {...register('password', {
-            required: 'Password is required',
+            required: isCreating ? 'Password is required' : false,
             minLength: {
               value: 8,
               message: 'Password must be at least 8 characters long',
