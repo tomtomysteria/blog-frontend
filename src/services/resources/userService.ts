@@ -1,23 +1,25 @@
 'use server';
 
+import { CreateUser, ResponseUser, UpdateUser } from '@/models/userTypes';
 import { apiClient } from '../api-client/backend';
 import { handleError, handleErrorLog } from '@/utils/errorUtils';
-
-export type User = {
-  id: string;
-  firstname: string;
-  lastname: string;
-  email: string;
-  username: string;
-  role: string;
-  birthdate?: string;
-};
+import {
+  CreateUserSchema,
+  ResponseUserSchema,
+  UpdateUserSchema,
+} from '@/models/userSchemas';
+import { z } from 'zod';
 
 // Fonction pour créer un utilisateur
-export const createUser = async (userData: Omit<User, 'id'>): Promise<User> => {
+export const createUser = async (
+  userData: CreateUser,
+): Promise<ResponseUser> => {
   try {
-    const res = await apiClient.post<User>('/users', userData);
-    return res.data;
+    // Validation et nettoyage des données avant l'envoi
+    const parsedData = CreateUserSchema.parse(userData);
+    const res = await apiClient.post<CreateUser>('/users', parsedData);
+    // Validation de la réponse avec Zod
+    return ResponseUserSchema.parse(res.data);
   } catch (error) {
     throw handleError(error);
   }
@@ -26,11 +28,12 @@ export const createUser = async (userData: Omit<User, 'id'>): Promise<User> => {
 // Fonction pour mettre à jour un utilisateur
 export const updateUser = async (
   id: string,
-  userData: Partial<User>,
-): Promise<User> => {
+  userData: Partial<UpdateUser>,
+): Promise<ResponseUser> => {
   try {
-    const res = await apiClient.put<User>(`/users/${id}`, userData);
-    return res.data;
+    const parsedData = UpdateUserSchema.parse(userData);
+    const res = await apiClient.put<UpdateUser>(`/users/${id}`, parsedData);
+    return ResponseUserSchema.parse(res.data);
   } catch (error) {
     throw handleError(error);
   }
@@ -46,10 +49,12 @@ export const deleteUser = async (id: string): Promise<void> => {
 };
 
 // Fonction pour récupérer tous les utilisateurs
-export const fetchUsers = async (): Promise<User[]> => {
+export const fetchUsers = async (): Promise<ResponseUser[]> => {
   try {
-    const res = await apiClient.get<User[]>('/users');
-    return res.data;
+    const res = await apiClient.get<ResponseUser[]>('/users');
+    // Valider les données reçues comme un tableau d'objets ResponseUser
+    const parsedUsers = z.array(ResponseUserSchema).parse(res.data);
+    return parsedUsers;
   } catch (error) {
     handleErrorLog(error);
     return [];
@@ -57,10 +62,12 @@ export const fetchUsers = async (): Promise<User[]> => {
 };
 
 // Fonction pour récupérer un utilisateur par ID
-export const fetchUserById = async (id: string): Promise<User | null> => {
+export const fetchUserById = async (
+  id: string,
+): Promise<ResponseUser | null> => {
   try {
-    const res = await apiClient.get<User>(`/users/${id}`);
-    return res.data;
+    const res = await apiClient.get<ResponseUser>(`/users/${id}`);
+    return ResponseUserSchema.parse(res.data);
   } catch (error) {
     handleErrorLog(error);
     return null;

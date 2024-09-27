@@ -4,17 +4,20 @@ import React from 'react';
 import { useRouter } from 'next/navigation';
 import UserForm from '@/components/UserForm';
 import { createUser } from '@/services/resources/userService';
+import { handleError } from '@/utils/errorUtils';
+import { SubmitHandler } from 'react-hook-form';
+import { CreateUser } from '@/models/userTypes';
 
-const CreateUser: React.FC = () => {
+const CreateUserClient: React.FC = () => {
   const router = useRouter();
 
-  const onSubmit = async (data: any) => {
+  const onSubmit: SubmitHandler<CreateUser> = async (data: CreateUser) => {
     try {
       await createUser(data);
       router.push('/admin/users');
       router.refresh(); // Rafraîchissement pour assurer la mise à jour des données
     } catch (error) {
-      console.error('Failed to create user:', error);
+      throw handleError(error);
     }
   };
 
@@ -26,4 +29,4 @@ const CreateUser: React.FC = () => {
   );
 };
 
-export default CreateUser;
+export default CreateUserClient;

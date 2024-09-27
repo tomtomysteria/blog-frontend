@@ -2,23 +2,26 @@
 
 import React from 'react';
 import { useRouter } from 'next/navigation';
-import { updateUser, User } from '@/services/resources/userService';
+import { updateUser } from '@/services/resources/userService';
 import UserForm from '@/components/UserForm';
+import { ResponseUser, UpdateUser } from '@/models/userTypes';
+import { SubmitHandler } from 'react-hook-form';
+import { handleError } from '@/utils/errorUtils';
 
 type UpdateUserClientProps = {
-  user: User;
+  user: ResponseUser;
 };
 
 const UpdateUserClient: React.FC<UpdateUserClientProps> = ({ user }) => {
   const router = useRouter();
 
-  const onSubmit = async (data: any) => {
+  const onSubmit: SubmitHandler<UpdateUser> = async (data: UpdateUser) => {
     try {
       await updateUser(user.id, data);
       router.push('/admin/users');
       router.refresh(); // Rafraîchissement pour assurer la mise à jour des données
     } catch (error) {
-      console.error('Failed to update user:', error);
+      throw handleError(error);
     }
   };
 

@@ -1,21 +1,15 @@
 import React from 'react';
-import { useForm, SubmitHandler } from 'react-hook-form';
+import { useForm, SubmitHandler, FieldValues } from 'react-hook-form';
+import { z } from 'zod';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { CreateUserSchema, UpdateUserSchema } from '@/models/userSchemas';
+import { CreateUser, UpdateUser } from '@/models/userTypes';
 
 type UserFormProps = {
-  onSubmit: SubmitHandler<FormValues>;
-  initialData?: Partial<FormValues>;
+  onSubmit: SubmitHandler<CreateUser> | SubmitHandler<UpdateUser>;
+  initialData?: Partial<UpdateUser>;
   isAdmin?: boolean; // Flag to determine if roles should be selectable
   isCreating?: boolean; // Flag to determine if it's a creation or an update
-};
-
-type FormValues = {
-  firstname: string;
-  lastname: string;
-  email: string;
-  username: string;
-  password: string;
-  role: string;
-  birthdate: string;
 };
 
 const UserForm: React.FC<UserFormProps> = ({
@@ -29,10 +23,17 @@ const UserForm: React.FC<UserFormProps> = ({
     handleSubmit,
     formState: { errors },
     // getValues,
-  } = useForm<FormValues>({ defaultValues: initialData });
+  } = useForm<CreateUser | UpdateUser>({
+    resolver: zodResolver(isCreating ? CreateUserSchema : UpdateUserSchema), // Utilisation de Zod pour la validation
+    defaultValues: initialData,
+  });
 
   // Plus nécessaire puisque la transformation est traitée dans le backend
-  // const handleFormSubmit: SubmitHandler<FormValues> = (data) => {
+  // const handleFormSubmit:
+  //   | SubmitHandler<CreateUser>
+  //   | SubmitHandler<UpdateUser> = (
+  //   data: CreateUser | UpdateUser,
+  // ) => {
   //   const values = getValues();
 
   //   // Set birthdate to null if it's an empty string
@@ -40,41 +41,39 @@ const UserForm: React.FC<UserFormProps> = ({
   //     values.birthdate = null;
   //   }
 
-  //   onSubmit(values);
+  //   onSubmit(values as any);
   // };
+
+  // Permet d'afficher les éventuelles erreurs retournés par zod à la soumission du formulaire
+  if (Object.keys(errors).length > 0) {
+    console.error(JSON.stringify(errors, null, 2));
+  }
 
   return (
     // Utiliser handleFormSubmit à la place de onSubmit directement pour transformer les données si besoin
-    <form onSubmit={handleSubmit(onSubmit)}>
+    <form
+      onSubmit={handleSubmit((data: CreateUser | UpdateUser) =>
+        onSubmit(data as any),
+      )}
+    >
       <div>
         <label>First Name:</label>
-        <input
-          {...register('firstname', { required: 'First name is required' })}
-        />
+        <input {...register('firstname')} />
         {errors.firstname && <p>{errors.firstname.message}</p>}
       </div>
       <div>
         <label>Last Name:</label>
-        <input
-          {...register('lastname', { required: 'Last name is required' })}
-        />
+        <input {...register('lastname')} />
         {errors.lastname && <p>{errors.lastname.message}</p>}
       </div>
       <div>
         <label>Email:</label>
-        <input
-          {...register('email', {
-            required: 'Email is required',
-            pattern: { value: /^\S+@\S+$/i, message: 'Invalid email format' },
-          })}
-        />
+        <input {...register('email', {})} />
         {errors.email && <p>{errors.email.message}</p>}
       </div>
       <div>
         <label>Username:</label>
-        <input
-          {...register('username', { required: 'Username is required' })}
-        />
+        <input {...register('username')} />
         {errors.username && <p>{errors.username.message}</p>}
       </div>
       <div>
@@ -82,19 +81,7 @@ const UserForm: React.FC<UserFormProps> = ({
         <input
           type="password"
           placeholder="Mot de passe"
-          {...register('password', {
-            required: isCreating ? 'Password is required' : false,
-            minLength: {
-              value: 8,
-              message: 'Password must be at least 8 characters long',
-            },
-            pattern: {
-              value:
-                /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/,
-              message:
-                'Password must include uppercase, lowercase, number, and special character',
-            },
-          })}
+          {...register('password')}
         />
         {errors.password && <p>{errors.password.message}</p>}
       </div>
