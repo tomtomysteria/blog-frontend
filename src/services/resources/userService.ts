@@ -1,6 +1,6 @@
 'use server';
 
-import { CreateUser, ResponseUser, UpdateUser } from '@/models/userTypes';
+import { User, ResponseUser } from '@/models/userTypes';
 import { apiClient } from '../api-client/backend';
 import { handleError, handleErrorLog } from '@/utils/errorUtils';
 import {
@@ -11,13 +11,11 @@ import {
 import { z } from 'zod';
 
 // Fonction pour créer un utilisateur
-export const createUser = async (
-  userData: CreateUser,
-): Promise<ResponseUser> => {
+export const createUser = async (userData: User): Promise<ResponseUser> => {
   try {
     // Validation et nettoyage des données avant l'envoi
     const parsedData = CreateUserSchema.parse(userData);
-    const res = await apiClient.post<CreateUser>('/users', parsedData);
+    const res = await apiClient.post<User>('/users', parsedData);
     // Validation de la réponse avec Zod
     return ResponseUserSchema.parse(res.data);
   } catch (error) {
@@ -28,11 +26,11 @@ export const createUser = async (
 // Fonction pour mettre à jour un utilisateur
 export const updateUser = async (
   id: string,
-  userData: Partial<UpdateUser>,
+  userData: Partial<User>,
 ): Promise<ResponseUser> => {
   try {
     const parsedData = UpdateUserSchema.parse(userData);
-    const res = await apiClient.put<UpdateUser>(`/users/${id}`, parsedData);
+    const res = await apiClient.put<User>(`/users/${id}`, parsedData);
     return ResponseUserSchema.parse(res.data);
   } catch (error) {
     throw handleError(error);

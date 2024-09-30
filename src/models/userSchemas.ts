@@ -1,14 +1,19 @@
 import { z } from 'zod';
 
 // Schéma Zod pour valider la structure des données utilisateurs
-const UserSchema = z.object({
-  firstname: z.string().min(1, 'First name is required'),
-  lastname: z.string().min(1, 'Last name is required'),
-  email: z.string().min(1, 'Email is required').email('Invalid email address'),
-  username: z.string().min(1, 'Username is required'),
-  role: z.enum(['blogger', 'admin', 'super-admin']),
-  birthdate: z.string().optional().nullable(),
-});
+const UserSchema = z
+  .object({
+    firstname: z.string().min(1, 'First name is required'),
+    lastname: z.string().min(1, 'Last name is required'),
+    email: z
+      .string()
+      .min(1, 'Email is required')
+      .email('Invalid email address'),
+    username: z.string().min(1, 'Username is required'),
+    role: z.enum(['blogger', 'admin', 'super-admin']),
+    birthdate: z.string().optional().nullable(),
+  })
+  .strip();
 
 // Schéma pour la création d'utilisateur avec "password"
 export const CreateUserSchema = UserSchema.extend({
@@ -20,11 +25,10 @@ export const CreateUserSchema = UserSchema.extend({
       /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/,
       'Password must include uppercase, lowercase, number, and special character',
     ),
-}).strict(); // Validation stricte de l'ensemble des propriétés de UserSchema et CreateUserSchema qui l'étend
+}); // Validation stricte de l'ensemble des propriétés de UserSchema et CreateUserSchema qui l'étend
 
 // Tous les champs sont optionnels, mais si 'password' est présent, il doit respecter certaines règles
 export const UpdateUserSchema = UserSchema.extend({
-  id: z.string(),
   password: z
     .string()
     .optional() // Password est optionnel mais doit suivre les contraintes si fourni
@@ -40,8 +44,8 @@ export const UpdateUserSchema = UserSchema.extend({
         )
       );
     }, 'Password must include uppercase, lowercase, number, and special character'), // Validation du regex si le mot de passe est présent
-}).strict(); // Validation stricte à l'envoi
+}); // Validation stricte à l'envoi
 
 export const ResponseUserSchema = UserSchema.extend({
   id: z.string(),
-});
+}).passthrough();

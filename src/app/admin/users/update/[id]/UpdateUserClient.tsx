@@ -4,9 +4,10 @@ import React from 'react';
 import { useRouter } from 'next/navigation';
 import { updateUser } from '@/services/resources/userService';
 import UserForm from '@/components/UserForm';
-import { ResponseUser, UpdateUser } from '@/models/userTypes';
+import { ResponseUser, User } from '@/models/userTypes';
 import { SubmitHandler } from 'react-hook-form';
 import { handleError } from '@/utils/errorUtils';
+import { UpdateUserSchema } from '@/models/userSchemas';
 
 type UpdateUserClientProps = {
   user: ResponseUser;
@@ -15,7 +16,7 @@ type UpdateUserClientProps = {
 const UpdateUserClient: React.FC<UpdateUserClientProps> = ({ user }) => {
   const router = useRouter();
 
-  const onSubmit: SubmitHandler<UpdateUser> = async (data: UpdateUser) => {
+  const onSubmit: SubmitHandler<User> = async (data: User) => {
     try {
       await updateUser(user.id, data);
       router.push('/admin/users');
@@ -25,7 +26,10 @@ const UpdateUserClient: React.FC<UpdateUserClientProps> = ({ user }) => {
     }
   };
 
-  return <UserForm initialData={user} onSubmit={onSubmit} isAdmin={true} />;
+  const parsedData = UpdateUserSchema.parse(user);
+  return (
+    <UserForm initialData={parsedData} onSubmit={onSubmit} isAdmin={true} />
+  );
 };
 
 export default UpdateUserClient;

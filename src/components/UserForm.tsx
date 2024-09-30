@@ -3,11 +3,12 @@ import { useForm, SubmitHandler, FieldValues } from 'react-hook-form';
 import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { CreateUserSchema, UpdateUserSchema } from '@/models/userSchemas';
-import { CreateUser, UpdateUser } from '@/models/userTypes';
+import { User } from '@/models/userTypes';
+import { logFormErrors } from '@/utils/errorUtils';
 
 type UserFormProps = {
-  onSubmit: SubmitHandler<CreateUser> | SubmitHandler<UpdateUser>;
-  initialData?: Partial<UpdateUser>;
+  onSubmit: SubmitHandler<User>;
+  initialData?: Partial<User>;
   isAdmin?: boolean; // Flag to determine if roles should be selectable
   isCreating?: boolean; // Flag to determine if it's a creation or an update
 };
@@ -23,17 +24,13 @@ const UserForm: React.FC<UserFormProps> = ({
     handleSubmit,
     formState: { errors },
     // getValues,
-  } = useForm<CreateUser | UpdateUser>({
+  } = useForm<User>({
     resolver: zodResolver(isCreating ? CreateUserSchema : UpdateUserSchema), // Utilisation de Zod pour la validation
     defaultValues: initialData,
   });
 
   // Plus nécessaire puisque la transformation est traitée dans le backend
-  // const handleFormSubmit:
-  //   | SubmitHandler<CreateUser>
-  //   | SubmitHandler<UpdateUser> = (
-  //   data: CreateUser | UpdateUser,
-  // ) => {
+  // const handleFormSubmit: SubmitHandler<User> = (data: User) => {
   //   const values = getValues();
 
   //   // Set birthdate to null if it's an empty string
@@ -45,17 +42,11 @@ const UserForm: React.FC<UserFormProps> = ({
   // };
 
   // Permet d'afficher les éventuelles erreurs retournés par zod à la soumission du formulaire
-  if (Object.keys(errors).length > 0) {
-    console.error(JSON.stringify(errors, null, 2));
-  }
+  logFormErrors(errors);
 
   return (
     // Utiliser handleFormSubmit à la place de onSubmit directement pour transformer les données si besoin
-    <form
-      onSubmit={handleSubmit((data: CreateUser | UpdateUser) =>
-        onSubmit(data as any),
-      )}
-    >
+    <form onSubmit={handleSubmit(onSubmit)}>
       <div>
         <label>First Name:</label>
         <input {...register('firstname')} />

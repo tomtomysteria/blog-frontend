@@ -6,12 +6,12 @@ import UserForm from '@/components/UserForm';
 import { createUser } from '@/services/resources/userService';
 import { handleError } from '@/utils/errorUtils';
 import { SubmitHandler } from 'react-hook-form';
-import { CreateUser } from '@/models/userTypes';
+import { User } from '@/models/userTypes';
 
 const CreateUserClient: React.FC = () => {
   const router = useRouter();
 
-  const onSubmit: SubmitHandler<CreateUser> = async (data: CreateUser) => {
+  const onSubmit: SubmitHandler<User> = async (data: User) => {
     try {
       await createUser(data);
       router.push('/admin/users');
