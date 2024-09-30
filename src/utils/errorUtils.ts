@@ -53,3 +53,9 @@ export function handleErrorLog(error: AxiosError | any) {
     console.error('Request failed:', error.message);
   }
 }
+
+export function logFormErrors(errors: Record<string, any>) {
+  if (Object.keys(errors).length > 0) {
+    console.error('Form validation errors:', JSON.stringify(errors, null, 2));
+  }
+}

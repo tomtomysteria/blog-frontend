@@ -1,13 +1,13 @@
+import { CategorySchema } from '@/models/categorySchemas';
+import { Category } from '@/models/categoryTypes';
+import { logFormErrors } from '@/utils/errorUtils';
+import { zodResolver } from '@hookform/resolvers/zod';
 import React from 'react';
 import { useForm, SubmitHandler } from 'react-hook-form';
 
 type CategoryFormProps = {
-  onSubmit: SubmitHandler<FormValues>;
-  initialData?: Partial<FormValues>;
-};
-
-type FormValues = {
-  name: string;
+  onSubmit: SubmitHandler<Category>;
+  initialData?: Partial<Category>;
 };
 
 const CategoryForm: React.FC<CategoryFormProps> = ({
@@ -18,17 +18,18 @@ const CategoryForm: React.FC<CategoryFormProps> = ({
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm<FormValues>({ defaultValues: initialData });
+  } = useForm<Category>({
+    resolver: zodResolver(CategorySchema),
+    defaultValues: initialData,
+  });
+
+  logFormErrors(errors);
 
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
       <div>
         <label>Nom de la catégorie:</label>
-        <input
-          {...register('name', {
-            required: 'Le nom de la catégorie est requis',
-          })}
-        />
+        <input {...register('name')} />
         {errors.name && <p>{errors.name.message}</p>}
       </div>
       <button type="submit">Enregistrer</button>

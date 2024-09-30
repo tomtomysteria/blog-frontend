@@ -4,17 +4,20 @@ import React from 'react';
 import { useRouter } from 'next/navigation';
 import CategoryForm from '@/components/CategoryForm';
 import { createCategory } from '@/services/resources/categoryService';
+import { Category } from '@/models/categoryTypes';
+import { SubmitHandler } from 'react-hook-form';
+import { handleError } from '@/utils/errorUtils';
 
-const CreateCategory: React.FC = () => {
+const CreateCategoryClient: React.FC = () => {
   const router = useRouter();
 
-  const onSubmit = async (data: any) => {
+  const onSubmit: SubmitHandler<Category> = async (data: Category) => {
     try {
       await createCategory(data);
       router.push('/admin/categories'); // Redirection vers la liste des catégories
       router.refresh(); // Rafraîchissement pour assurer la mise à jour des données
     } catch (error) {
-      console.error('Failed to create category:', error);
+      throw handleError(error);
     }
   };
 
@@ -26,4 +29,4 @@ const CreateCategory: React.FC = () => {
   );
 };
 
-export default CreateCategory;
+export default CreateCategoryClient;

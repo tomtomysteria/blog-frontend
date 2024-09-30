@@ -2,11 +2,15 @@
 
 import React from 'react';
 import { useRouter } from 'next/navigation';
-import { Category, updateCategory } from '@/services/resources/categoryService';
+import { updateCategory } from '@/services/resources/categoryService';
 import CategoryForm from '@/components/CategoryForm';
+import { Category, ResponseCategory } from '@/models/categoryTypes';
+import { SubmitHandler } from 'react-hook-form';
+import { handleError } from '@/utils/errorUtils';
+import { CategorySchema } from '@/models/categorySchemas';
 
 type UpdateCategoryClientProps = {
-  category: Category;
+  category: ResponseCategory;
 };
 
 const UpdateCategoryClient: React.FC<UpdateCategoryClientProps> = ({
@@ -14,17 +18,18 @@ const UpdateCategoryClient: React.FC<UpdateCategoryClientProps> = ({
 }) => {
   const router = useRouter();
 
-  const onSubmit = async (data: any) => {
+  const onSubmit: SubmitHandler<Category> = async (data: Category) => {
     try {
       await updateCategory(category.id, data);
       router.push('/admin/categories'); // Redirection vers la liste des catégories
       router.refresh(); // Rafraîchissement pour assurer la mise à jour des données
     } catch (error) {
-      console.error('Failed to update category:', error);
+      throw handleError(error);
     }
   };
 
-  return <CategoryForm initialData={category} onSubmit={onSubmit} />;
+  const parsedData = CategorySchema.parse(category);
+  return <CategoryForm initialData={parsedData} onSubmit={onSubmit} />;
 };
 
 export default UpdateCategoryClient;
