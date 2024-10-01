@@ -15,7 +15,10 @@ export const createCategory = async (
 ): Promise<ResponseCategory> => {
   try {
     const parsedData = CategorySchema.parse(categoryData);
-    const res = await apiClient.post<Category>('/categories', parsedData);
+    const res = await apiClient.post<ResponseCategory>(
+      '/categories',
+      parsedData,
+    );
     return ResponseCategorySchema.parse(res.data);
   } catch (error) {
     throw handleError(error);
@@ -29,7 +32,10 @@ export const updateCategory = async (
 ): Promise<ResponseCategory> => {
   try {
     const parsedData = CategorySchema.parse(categoryData);
-    const res = await apiClient.put<Category>(`/categories/${id}`, parsedData);
+    const res = await apiClient.put<ResponseCategory>(
+      `/categories/${id}`,
+      parsedData,
+    );
     return ResponseCategorySchema.parse(res.data);
   } catch (error) {
     throw handleError(error);

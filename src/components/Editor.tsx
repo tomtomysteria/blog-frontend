@@ -75,6 +75,7 @@ const Editor: React.FC<EditorProps> = ({ content, onContentChange }) => {
       {/* Barre d'outils stylisée avec Tailwind */}
       <div className="flex space-x-2 mb-2">
         <button
+          type="button"
           className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-700 disabled:bg-gray-300"
           onClick={() => editor?.chain().focus().toggleBold().run()}
           disabled={!editor?.can().chain().focus().toggleBold().run()}
@@ -82,6 +83,7 @@ const Editor: React.FC<EditorProps> = ({ content, onContentChange }) => {
           Gras
         </button>
         <button
+          type="button"
           className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-700 disabled:bg-gray-300"
           onClick={() => editor?.chain().focus().toggleItalic().run()}
           disabled={!editor?.can().chain().focus().toggleItalic().run()}
@@ -89,12 +91,14 @@ const Editor: React.FC<EditorProps> = ({ content, onContentChange }) => {
           Italique
         </button>
         <button
+          type="button"
           className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-700"
           onClick={setLink}
         >
           Ajouter un lien
         </button>
         <button
+          type="button"
           className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-700"
           onClick={addImage}
         >

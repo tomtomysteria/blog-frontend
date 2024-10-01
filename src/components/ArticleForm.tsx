@@ -1,21 +1,18 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { useForm, SubmitHandler, Controller } from 'react-hook-form';
 import Editor from '@/components/Editor';
-import { User } from '@/services/resources/userService';
-import { Category } from '@/services/resources/categoryService';
-import { Article } from '@/services/resources/articleService';
-
-type FormValues = {
-  title: string;
-  content: string;
-  author: string;
-  category: string;
-};
+import { ResponseUser } from '@/models/userTypes';
+import { ResponseCategory } from '@/models/categoryTypes';
+import { Article, ArticleFormValues } from '@/models/articleTypes';
+import { logFormErrors } from '@/utils/errorUtils';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { ArticleFormValuesSchema } from '@/models/articleSchemas';
+import { cleanHtmlContent } from '@/utils/textUtils';
 
 type ArticleFormProps = {
-  onSubmit: SubmitHandler<FormValues>;
-  authors: User[];
-  categories: Category[];
+  onSubmit: SubmitHandler<ArticleFormValues>;
+  authors: ResponseUser[];
+  categories: ResponseCategory[];
   initialData?: Partial<Article>;
 };
 
@@ -30,41 +27,44 @@ const ArticleForm: React.FC<ArticleFormProps> = ({
     control,
     handleSubmit,
     formState: { errors },
-  } = useForm<FormValues>({
+  } = useForm<ArticleFormValues>({
+    resolver: zodResolver(ArticleFormValuesSchema),
     defaultValues: {
       title: initialData?.title || '',
       content: initialData?.content || '',
-      author: initialData?.author?.id || '', // Utilisation de l'ID de l'auteur
-      category: initialData?.category?.id || '', // Utilisation de l'ID de la catégorie
+      authorId: initialData?.author?.id || '',
+      categoryId: initialData?.category?.id || '',
     },
   });
 
-  // Ajouter un état pour gérer le contenu de l'éditeur
-  const [content, setContent] = useState<string>(initialData?.content || '');
-
-  const handleFormSubmit: SubmitHandler<FormValues> = (data) => {
-    onSubmit({ ...data, content }); // Envoyer le contenu de l'éditeur avec le reste du formulaire
-  };
+  logFormErrors(errors);
 
   return (
-    <form onSubmit={handleSubmit(handleFormSubmit)}>
+    <form onSubmit={handleSubmit(onSubmit)}>
       <div>
         <label>Titre:</label>
-        <input {...register('title', { required: 'Le titre est requis' })} />
+        <input {...register('title')} />
         {errors.title && <p>{errors.title.message}</p>}
       </div>
       <div className="my-5">
         <label>Contenu:</label>
-        {/* Remplacer le textarea par l'éditeur Tiptap */}
-        <Editor content={content} onContentChange={setContent} />
+        <Controller
+          name="content"
+          control={control}
+          render={({ field }) => (
+            <Editor
+              content={cleanHtmlContent(field.value)}
+              onContentChange={field.onChange}
+            />
+          )}
+        />
         {errors.content && <p>{errors.content.message}</p>}
       </div>
       <div>
         <label>Auteur:</label>
         <Controller
-          name="author"
+          name="authorId"
           control={control}
-          rules={{ required: "L'auteur est requis" }}
           render={({ field }) => (
             <select {...field}>
               <option value="">Sélectionnez un auteur</option>
@@ -76,14 +76,13 @@ const ArticleForm: React.FC<ArticleFormProps> = ({
             </select>
           )}
         />
-        {errors.author && <p>{errors.author.message}</p>}
+        {errors.authorId && <p>{errors.authorId.message}</p>}
       </div>
       <div>
         <label>Catégorie:</label>
         <Controller
-          name="category"
+          name="categoryId"
           control={control}
-          rules={{ required: 'La catégorie est requise' }}
           render={({ field }) => (
             <select {...field}>
               <option value="">Sélectionnez une catégorie</option>
@@ -95,7 +94,7 @@ const ArticleForm: React.FC<ArticleFormProps> = ({
             </select>
           )}
         />
-        {errors.category && <p>{errors.category.message}</p>}
+        {errors.categoryId && <p>{errors.categoryId.message}</p>}
       </div>
       <button type="submit">Enregistrer</button>
     </form>

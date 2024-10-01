@@ -1,7 +1,7 @@
-import { Article } from '@/services/resources/articleService';
+import { ResponseArticle } from '@/models/articleTypes';
 
 type ArticleDetailProps = {
-  article: Article;
+  article: ResponseArticle;
 };
 
 const ArticleDetail = ({ article }: ArticleDetailProps) => {

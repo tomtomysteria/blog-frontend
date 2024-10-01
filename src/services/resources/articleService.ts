@@ -2,24 +2,21 @@
 
 import { handleError, handleErrorLog } from '@/utils/errorUtils';
 import { apiClient } from '../api-client/backend';
-import { User } from './userService';
-import { Category } from './categoryService';
-
-export type Article = {
-  id: string;
-  title: string;
-  content: string;
-  author: User;
-  category: Category;
-};
+import { z } from 'zod';
+import { ArticleFormValues, ResponseArticle } from '@/models/articleTypes';
+import {
+  ArticleFormValuesSchema,
+  ResponseArticleSchema,
+} from '@/models/articleSchemas';
 
 // Fonction pour créer un article
 export const createArticle = async (
-  articleData: Omit<Article, 'id'>,
-): Promise<Article> => {
+  articleData: ArticleFormValues,
+): Promise<ResponseArticle> => {
   try {
-    const res = await apiClient.post<Article>('/articles', articleData);
-    return res.data;
+    const parsedData = ArticleFormValuesSchema.parse(articleData);
+    const res = await apiClient.post<ResponseArticle>('/articles', parsedData);
+    return ResponseArticleSchema.parse(res.data);
   } catch (error) {
     throw handleError(error);
   }
@@ -28,11 +25,15 @@ export const createArticle = async (
 // Fonction pour mettre à jour un article
 export const updateArticle = async (
   id: string,
-  articleData: Partial<Article>,
-): Promise<Article> => {
+  articleData: Partial<ArticleFormValues>,
+): Promise<ResponseArticle> => {
   try {
-    const res = await apiClient.put<Article>(`/articles/${id}`, articleData);
-    return res.data;
+    const parsedData = ArticleFormValuesSchema.parse(articleData);
+    const res = await apiClient.put<ResponseArticle>(
+      `/articles/${id}`,
+      parsedData,
+    );
+    return ResponseArticleSchema.parse(res.data);
   } catch (error) {
     throw handleError(error);
   }
@@ -48,10 +49,11 @@ export const deleteArticle = async (id: string): Promise<void> => {
 };
 
 // Fonction pour récupérer tous les articles
-export const fetchArticles = async (): Promise<Article[]> => {
+export const fetchArticles = async (): Promise<ResponseArticle[]> => {
   try {
-    const res = await apiClient.get<Article[]>('/articles');
-    return res.data;
+    const res = await apiClient.get<ResponseArticle[]>('/articles');
+    const parsedArticles = z.array(ResponseArticleSchema).parse(res.data);
+    return parsedArticles;
   } catch (error) {
     handleErrorLog(error);
     return [];
@@ -59,10 +61,12 @@ export const fetchArticles = async (): Promise<Article[]> => {
 };
 
 // Fonction pour récupérer un article par ID
-export const fetchArticleById = async (id: string): Promise<Article | null> => {
+export const fetchArticleById = async (
+  id: string,
+): Promise<ResponseArticle | null> => {
   try {
-    const res = await apiClient.get<Article>(`/articles/${id}`);
-    return res.data;
+    const res = await apiClient.get<ResponseArticle>(`/articles/${id}`);
+    return ResponseArticleSchema.parse(res.data);
   } catch (error) {
     handleErrorLog(error);
     return null;

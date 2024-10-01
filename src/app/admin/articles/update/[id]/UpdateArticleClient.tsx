@@ -2,24 +2,26 @@
 
 import React, { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { Article, updateArticle } from '@/services/resources/articleService';
+import { updateArticle } from '@/services/resources/articleService';
 import ArticleForm from '@/components/ArticleForm';
-import {
-  Category,
-  fetchCategories,
-} from '@/services/resources/categoryService';
-import { fetchUsers, User } from '@/services/resources/userService';
+import { fetchCategories } from '@/services/resources/categoryService';
+import { fetchUsers } from '@/services/resources/userService';
+import { ResponseUser } from '@/models/userTypes';
+import { ResponseCategory } from '@/models/categoryTypes';
+import { SubmitHandler } from 'react-hook-form';
+import { ArticleSchema } from '@/models/articleSchemas';
+import { ArticleFormValues, ResponseArticle } from '@/models/articleTypes';
 
 type UpdateArticleClientProps = {
-  article: Article;
+  article: ResponseArticle;
 };
 
 const UpdateArticleClient: React.FC<UpdateArticleClientProps> = ({
   article,
 }) => {
   const router = useRouter();
-  const [authors, setAuthors] = useState<User[]>([]);
-  const [categories, setCategories] = useState<Category[]>([]);
+  const [authors, setAuthors] = useState<ResponseUser[]>([]);
+  const [categories, setCategories] = useState<ResponseCategory[]>([]);
 
   // Récupérer les auteurs et catégories lors du montage du composant
   useEffect(() => {
@@ -38,7 +40,9 @@ const UpdateArticleClient: React.FC<UpdateArticleClientProps> = ({
     loadData();
   }, []);
 
-  const onSubmit = async (data: any) => {
+  const onSubmit: SubmitHandler<ArticleFormValues> = async (
+    data: ArticleFormValues,
+  ) => {
     try {
       await updateArticle(article.id, data);
       router.push('/admin/articles');
@@ -48,9 +52,10 @@ const UpdateArticleClient: React.FC<UpdateArticleClientProps> = ({
     }
   };
 
+  const parsedData = ArticleSchema.parse(article);
   return (
     <ArticleForm
-      initialData={article}
+      initialData={parsedData}
       onSubmit={onSubmit}
       authors={authors}
       categories={categories}

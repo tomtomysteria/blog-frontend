@@ -5,15 +5,10 @@ import { useRouter } from 'next/navigation';
 import DOMPurify from 'dompurify'; // Import DOMPurify for sanitizing HTML
 import { deleteArticle } from '@/services/resources/articleService';
 import { Button } from './ui/button';
-
-interface Article {
-  id: string;
-  title: string;
-  content: string;
-}
+import { ResponseArticle } from '@/models/articleTypes';
 
 interface ArticleListProps {
-  articles: Article[];
+  articles: ResponseArticle[];
   isAdmin?: boolean;
 }
 
