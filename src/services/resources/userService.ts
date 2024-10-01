@@ -15,7 +15,7 @@ export const createUser = async (userData: User): Promise<ResponseUser> => {
   try {
     // Validation et nettoyage des données avant l'envoi
     const parsedData = CreateUserSchema.parse(userData);
-    const res = await apiClient.post<User>('/users', parsedData);
+    const res = await apiClient.post<ResponseUser>('/users', parsedData);
     // Validation de la réponse avec Zod
     return ResponseUserSchema.parse(res.data);
   } catch (error) {
@@ -30,7 +30,7 @@ export const updateUser = async (
 ): Promise<ResponseUser> => {
   try {
     const parsedData = UpdateUserSchema.parse(userData);
-    const res = await apiClient.put<User>(`/users/${id}`, parsedData);
+    const res = await apiClient.put<ResponseUser>(`/users/${id}`, parsedData);
     return ResponseUserSchema.parse(res.data);
   } catch (error) {
     throw handleError(error);

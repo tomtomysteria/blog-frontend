@@ -9,7 +9,7 @@ const LoginComponent: React.FC = () => {
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const { login, accessToken, role } = useAuth(); // Récupérer la fonction login et les tokens
+  const { login, accessToken, role } = useAuth();
   const router = useRouter();
 
   const onSubmit = async (e: React.FormEvent) => {

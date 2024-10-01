@@ -56,6 +56,6 @@ export function handleErrorLog(error: AxiosError | any) {
 
 export function logFormErrors(errors: Record<string, any>) {
   if (Object.keys(errors).length > 0) {
-    console.error('Form validation errors:', JSON.stringify(errors, null, 2));
+    console.log('Form validation errors:', errors);
   }
 }

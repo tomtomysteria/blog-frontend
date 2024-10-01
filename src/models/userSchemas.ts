@@ -1,6 +1,5 @@
 import { z } from 'zod';
 
-// Schéma Zod pour valider la structure des données utilisateurs
 const UserSchema = z
   .object({
     firstname: z.string().min(1, 'First name is required'),
@@ -15,7 +14,6 @@ const UserSchema = z
   })
   .strip();
 
-// Schéma pour la création d'utilisateur avec "password"
 export const CreateUserSchema = UserSchema.extend({
   password: z
     .string()
@@ -25,7 +23,11 @@ export const CreateUserSchema = UserSchema.extend({
       /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/,
       'Password must include uppercase, lowercase, number, and special character',
     ),
-}); // Validation stricte de l'ensemble des propriétés de UserSchema et CreateUserSchema qui l'étend
+});
+
+export const CreateUserFromFrontOfficeSchema = CreateUserSchema.omit({
+  role: true,
+});
 
 // Tous les champs sont optionnels, mais si 'password' est présent, il doit respecter certaines règles
 export const UpdateUserSchema = UserSchema.extend({
@@ -44,7 +46,7 @@ export const UpdateUserSchema = UserSchema.extend({
         )
       );
     }, 'Password must include uppercase, lowercase, number, and special character'), // Validation du regex si le mot de passe est présent
-}); // Validation stricte à l'envoi
+});
 
 export const ResponseUserSchema = UserSchema.extend({
   id: z.string(),

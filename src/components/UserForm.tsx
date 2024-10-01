@@ -2,7 +2,11 @@ import React from 'react';
 import { useForm, SubmitHandler, FieldValues } from 'react-hook-form';
 import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { CreateUserSchema, UpdateUserSchema } from '@/models/userSchemas';
+import {
+  CreateUserFromFrontOfficeSchema,
+  CreateUserSchema,
+  UpdateUserSchema,
+} from '@/models/userSchemas';
 import { User } from '@/models/userTypes';
 import { logFormErrors } from '@/utils/errorUtils';
 
@@ -25,7 +29,13 @@ const UserForm: React.FC<UserFormProps> = ({
     formState: { errors },
     // getValues,
   } = useForm<User>({
-    resolver: zodResolver(isCreating ? CreateUserSchema : UpdateUserSchema), // Utilisation de Zod pour la validation
+    resolver: zodResolver(
+      isCreating
+        ? isAdmin
+          ? CreateUserSchema
+          : CreateUserFromFrontOfficeSchema
+        : UpdateUserSchema,
+    ), // Utilisation de Zod pour la validation
     defaultValues: initialData,
   });
 

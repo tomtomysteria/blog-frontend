@@ -30,7 +30,7 @@ const AdminLayout = ({ children }: { children: React.ReactNode }) => {
     <div>
       <header>
         <h1 className="text-4xl font-bold mb-8">Admin Dashboard</h1>
-        {/* Ici, tu peux ajouter une barre de navigation pour l'admin, etc. */}
+        {/* Possibilité d'ajouter ici une barre de navigation pour l'admin, etc. */}
       </header>
       <main>{children}</main>
     </div>

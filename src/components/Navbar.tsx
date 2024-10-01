@@ -1,7 +1,7 @@
 'use client';
 
 import Link from 'next/link';
-import Image from 'next/image'; // Importer le composant Image de Next.js
+import Image from 'next/image';
 import { useAuth } from '@/context/AuthContext';
 import { useEffect, useState } from 'react';
 
@@ -21,10 +21,10 @@ const Navbar = () => {
         <Image
           src="/images/logo.png" // Chemin vers l'image dans le dossier public
           alt="Logo"
-          width={50} // Largeur de l'image
-          height={50} // Hauteur de l'image
-          priority // Priorité au chargement pour le logo
-          className="w-auto h-auto"
+          width={50} // Largeur de référence de l'image
+          height={50} // Hauteur de référence de l'image
+          priority // Priorité au chargement de l'image même si elle se trouve en dehors du viewport
+          className="w-auto h-auto" // Laisse l'image s'ajuster tout en conservant le ratio
         />
         <span className="text-lg font-bold ml-2">Home</span>
       </Link>
