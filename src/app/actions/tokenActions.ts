@@ -4,7 +4,7 @@ import { getNewAccessToken } from '@/services/auth/tokenService';
 import { handleError } from '@/utils/errorUtils';
 import { getServerCookie, setServerCookie } from './cookiesActions';
 
-export async function refreshToken(): Promise<{
+export async function refreshTokens(): Promise<{
   accessToken: string;
   refreshToken: string | null;
 }> {

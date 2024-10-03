@@ -12,9 +12,11 @@ import {
   setServerCookie,
   getServerCookie,
   removeServerCookie,
-} from '@/app/actions/cookiesActions'; // Import des Server Actions
+} from '@/app/actions/cookiesActions';
+import { refreshTokens } from '@/app/actions/tokenActions';
 import { useRouter } from 'next/navigation';
 import { handleError } from '@/utils/errorUtils';
+import { checkIfTokenExpired } from '@/utils/tokensUtils';
 
 interface AuthContextType {
   accessToken: string | null;
@@ -36,9 +38,8 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   const [refreshToken, setRefreshToken] = useState<string | null>(null);
   const [role, setRole] = useState<string | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
-  const router = useRouter(); // Utiliser le router pour la redirection
+  const router = useRouter();
 
-  // Fonction de login
   const handleLogin = async (identifier: string, password: string) => {
     try {
       const {
@@ -68,7 +69,6 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     }
   };
 
-  // Fonction de logout
   const handleLogout = async () => {
     // Supprimer les cookies via les Server Actions
     await removeServerCookie('accessToken');
@@ -105,10 +105,27 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
         if (storedRole) {
           setRole(storedRole);
         }
+
+        // Rafraîchir le token si nécessaire
+        if (storedAccessToken && storedRefreshToken) {
+          const isTokenExpired = checkIfTokenExpired(storedAccessToken);
+
+          if (isTokenExpired) {
+            // Appeler la Server Action pour rafraîchir les tokens
+            const {
+              accessToken: newAccessToken,
+              refreshToken: newRefreshToken,
+            } = await refreshTokens();
+
+            // Mettre à jour les tokens
+            setAccessToken(newAccessToken);
+            setRefreshToken(newRefreshToken || storedRefreshToken);
+          }
+        }
       } catch (error) {
         console.error('Failed to initialize authentication:', error);
       } finally {
-        setLoading(false); // Met fin à l'état de chargement
+        setLoading(false);
       }
     };
 
