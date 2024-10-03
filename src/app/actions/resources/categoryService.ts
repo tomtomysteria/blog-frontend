@@ -1,7 +1,7 @@
 'use server';
 
 import { handleError, handleErrorLog } from '@/utils/errorUtils';
-import { apiClient } from '../api-client/backend';
+import { apiClient } from '../../../services/api-client/backend';
 import { z } from 'zod';
 import { Category, ResponseCategory } from '@/models/categoryTypes';
 import {

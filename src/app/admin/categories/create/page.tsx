@@ -3,7 +3,7 @@
 import React from 'react';
 import { useRouter } from 'next/navigation';
 import CategoryForm from '@/components/CategoryForm';
-import { createCategory } from '@/services/resources/categoryService';
+import { createCategory } from '@/app/actions/resources/categoryService';
 import { Category } from '@/models/categoryTypes';
 import { SubmitHandler } from 'react-hook-form';
 import { handleError } from '@/utils/errorUtils';

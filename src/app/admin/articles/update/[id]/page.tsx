@@ -1,5 +1,5 @@
 import React from 'react';
-import { fetchArticleById } from '@/services/resources/articleService';
+import { fetchArticleById } from '@/app/actions/resources/articleService';
 import UpdateArticleClient from './UpdateArticleClient';
 
 export default async function UpdateArticlePage({

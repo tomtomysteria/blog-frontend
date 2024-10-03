@@ -1,7 +1,7 @@
 'use server';
 
 import { User, ResponseUser } from '@/models/userTypes';
-import { apiClient } from '../api-client/backend';
+import { apiClient } from '../../../services/api-client/backend';
 import { handleError, handleErrorLog } from '@/utils/errorUtils';
 import {
   CreateUserSchema,

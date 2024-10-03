@@ -1,4 +1,4 @@
-'use server'; // Déclare que cette fonction est une Server Action
+'use server';
 
 import { cookies } from 'next/headers';
 import { NextResponse } from 'next/server';

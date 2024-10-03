@@ -3,7 +3,7 @@
 import React from 'react';
 import { useRouter } from 'next/navigation';
 import DOMPurify from 'dompurify'; // Import DOMPurify for sanitizing HTML
-import { deleteArticle } from '@/services/resources/articleService';
+import { deleteArticle } from '@/app/actions/resources/articleService';
 import { Button } from './ui/button';
 import { ResponseArticle } from '@/models/articleTypes';
 

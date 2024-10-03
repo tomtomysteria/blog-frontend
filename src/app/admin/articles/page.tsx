@@ -1,5 +1,5 @@
 import dynamic from 'next/dynamic';
-import { fetchArticles } from '@/services/resources/articleService';
+import { fetchArticles } from '@/app/actions/resources/articleService';
 
 // Charger dynamiquement le composant ArticleList
 const ArticleList = dynamic(() => import('@/components/ArticleList'), {

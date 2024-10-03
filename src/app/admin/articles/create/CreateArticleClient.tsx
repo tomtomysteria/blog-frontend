@@ -2,7 +2,7 @@
 
 import React from 'react';
 import { useRouter } from 'next/navigation';
-import { createArticle } from '@/services/resources/articleService';
+import { createArticle } from '@/app/actions/resources/articleService';
 import ArticleForm from '@/components/ArticleForm';
 import { ResponseUser } from '@/models/userTypes';
 import { ResponseCategory } from '@/models/categoryTypes';

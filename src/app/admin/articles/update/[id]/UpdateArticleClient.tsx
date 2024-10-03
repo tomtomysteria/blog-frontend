@@ -2,10 +2,10 @@
 
 import React, { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { updateArticle } from '@/services/resources/articleService';
+import { updateArticle } from '@/app/actions/resources/articleService';
 import ArticleForm from '@/components/ArticleForm';
-import { fetchCategories } from '@/services/resources/categoryService';
-import { fetchUsers } from '@/services/resources/userService';
+import { fetchCategories } from '@/app/actions/resources/categoryService';
+import { fetchUsers } from '@/app/actions/resources/userService';
 import { ResponseUser } from '@/models/userTypes';
 import { ResponseCategory } from '@/models/categoryTypes';
 import { SubmitHandler } from 'react-hook-form';

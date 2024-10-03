@@ -2,7 +2,7 @@
 
 import React from 'react';
 import { useRouter } from 'next/navigation';
-import { updateUser } from '@/services/resources/userService';
+import { updateUser } from '@/app/actions/resources/userService';
 import UserForm from '@/components/UserForm';
 import { ResponseUser, User } from '@/models/userTypes';
 import { SubmitHandler } from 'react-hook-form';

@@ -1,6 +1,6 @@
 'use client';
 
-import { deleteCategory } from '@/services/resources/categoryService';
+import { deleteCategory } from '@/app/actions/resources/categoryService';
 import { useRouter } from 'next/navigation';
 import React from 'react';
 

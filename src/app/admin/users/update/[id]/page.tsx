@@ -1,5 +1,5 @@
 import React from 'react';
-import { fetchUserById } from '@/services/resources/userService';
+import { fetchUserById } from '@/app/actions/resources/userService';
 import UpdateUserClient from './UpdateUserClient';
 
 export default async function UpdateUserPage({

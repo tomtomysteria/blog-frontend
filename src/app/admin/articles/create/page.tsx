@@ -1,6 +1,6 @@
 import React from 'react';
-import { fetchUsers } from '@/services/resources/userService';
-import { fetchCategories } from '@/services/resources/categoryService';
+import { fetchUsers } from '@/app/actions/resources/userService';
+import { fetchCategories } from '@/app/actions/resources/categoryService';
 import CreateArticleClient from './CreateArticleClient';
 
 export default async function CreateArticlePage() {

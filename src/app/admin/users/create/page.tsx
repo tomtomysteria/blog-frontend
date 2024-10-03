@@ -3,7 +3,7 @@
 import React from 'react';
 import { useRouter } from 'next/navigation';
 import UserForm from '@/components/UserForm';
-import { createUser } from '@/services/resources/userService';
+import { createUser } from '@/app/actions/resources/userService';
 import { handleError } from '@/utils/errorUtils';
 import { SubmitHandler } from 'react-hook-form';
 import { User } from '@/models/userTypes';

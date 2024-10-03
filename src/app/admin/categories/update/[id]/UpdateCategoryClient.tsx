@@ -2,7 +2,7 @@
 
 import React from 'react';
 import { useRouter } from 'next/navigation';
-import { updateCategory } from '@/services/resources/categoryService';
+import { updateCategory } from '@/app/actions/resources/categoryService';
 import CategoryForm from '@/components/CategoryForm';
 import { Category, ResponseCategory } from '@/models/categoryTypes';
 import { SubmitHandler } from 'react-hook-form';
