@@ -9,10 +9,10 @@ import React, {
 } from 'react';
 import { login as serverLogin } from '@/app/actions/authActions';
 import {
-  getServerCookieApiRoute,
-  setServerCookieApiRoute,
-  removeServerCookieApiRoute,
-} from '@/services/api-routes/cookiesApi';
+  setServerCookie,
+  getServerCookie,
+  removeServerCookie,
+} from '@/app/actions/cookiesActions'; // Import des Server Actions
 import { useRouter } from 'next/navigation';
 import { handleError } from '@/utils/errorUtils';
 
@@ -47,10 +47,10 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
         role: userRole,
       } = await serverLogin(identifier, password);
 
-      // Définir les cookies via les API Routes
-      await setServerCookieApiRoute('accessToken', accessToken);
-      await setServerCookieApiRoute('refreshToken', refreshToken);
-      await setServerCookieApiRoute('role', userRole);
+      // Définir les cookies via les Server Actions
+      await setServerCookie('accessToken', accessToken);
+      await setServerCookie('refreshToken', refreshToken);
+      await setServerCookie('role', userRole);
 
       // Mettre à jour l'état
       setAccessToken(accessToken);
@@ -70,10 +70,10 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
 
   // Fonction de logout
   const handleLogout = async () => {
-    // Supprimer les cookies via les API Routes
-    await removeServerCookieApiRoute('accessToken');
-    await removeServerCookieApiRoute('refreshToken');
-    await removeServerCookieApiRoute('role');
+    // Supprimer les cookies via les Server Actions
+    await removeServerCookie('accessToken');
+    await removeServerCookie('refreshToken');
+    await removeServerCookie('role');
 
     // Réinitialiser l'état
     setAccessToken(null);
@@ -88,14 +88,13 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     return role === requiredRole;
   };
 
-  // Initialisation de l'authentification à partir des cookies via les API Routes
+  // Initialisation de l'authentification à partir des cookies via les Server Actions
   useEffect(() => {
     const initializeAuth = async () => {
       try {
-        const storedAccessToken = await getServerCookieApiRoute('accessToken');
-        const storedRefreshToken =
-          await getServerCookieApiRoute('refreshToken');
-        const storedRole = await getServerCookieApiRoute('role');
+        const storedAccessToken = await getServerCookie('accessToken');
+        const storedRefreshToken = await getServerCookie('refreshToken');
+        const storedRole = await getServerCookie('role');
 
         if (storedAccessToken) {
           setAccessToken(storedAccessToken);
@@ -116,9 +115,8 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     initializeAuth();
   }, []);
 
-  // Si en cours de chargement, on peut afficher un écran de chargement
   if (loading) {
-    return <div>Loading...</div>; // Tu peux personnaliser cet écran de chargement
+    return <div>Loading...</div>;
   }
 
   return (

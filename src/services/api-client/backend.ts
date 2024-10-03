@@ -1,10 +1,10 @@
 import axios from 'axios';
-import {
-  getStoredItem,
-  setStoredItemApiRoute,
-} from '@/utils/cookiesUtils.server';
 import { getNewAccessToken } from '../auth/tokenService';
 import { baseURLBackend } from '../config';
+import {
+  getServerCookie,
+  setServerCookieNextResponse,
+} from '@/app/actions/cookiesActions';
 
 let accessTokenMemory: string | null = null; // Stocke temporairement le token en mémoire
 
@@ -18,7 +18,7 @@ const createApiClient = (withAuth: boolean = true) => {
   if (withAuth) {
     apiClient.interceptors.request.use(async (config) => {
       // Utiliser le token en mémoire ou depuis les cookies
-      const token = accessTokenMemory || getStoredItem('accessToken');
+      const token = accessTokenMemory || (await getServerCookie('accessToken'));
 
       if (token) {
         config.headers.Authorization = `Bearer ${token}`; // Ajoute le token au header Authorization
@@ -41,13 +41,13 @@ const createApiClient = (withAuth: boolean = true) => {
           originalRequest._retry = true; // Évite les boucles infinies
 
           try {
-            const refreshToken = getStoredItem('refreshToken');
+            const refreshToken = await getServerCookie('refreshToken');
             if (refreshToken) {
               // Obtenir un nouveau token avec le refresh token
               const { accessToken } = await getNewAccessToken(refreshToken);
 
               // Mettre à jour le cookie côté serveur
-              setStoredItemApiRoute('accessToken', accessToken);
+              await setServerCookieNextResponse('accessToken', accessToken);
 
               // Mettre à jour le token en mémoire pour éviter de relire les cookies
               accessTokenMemory = accessToken;

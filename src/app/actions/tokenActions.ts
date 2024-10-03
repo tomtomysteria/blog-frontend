@@ -1,11 +1,8 @@
 'use server';
 
-import {
-  getStoredItem,
-  setStoredItemApiRoute,
-} from '@/utils/cookiesUtils.server';
 import { getNewAccessToken } from '@/services/auth/tokenService';
 import { handleError } from '@/utils/errorUtils';
+import { getServerCookie, setServerCookie } from './cookiesActions';
 
 export async function refreshToken(): Promise<{
   accessToken: string;
@@ -13,7 +10,7 @@ export async function refreshToken(): Promise<{
 }> {
   try {
     // Récupérer le refreshToken à partir des cookies
-    const refreshToken = getStoredItem('refreshToken');
+    const refreshToken = await getServerCookie('refreshToken');
 
     if (!refreshToken) {
       throw new Error('No refresh token found');
@@ -24,11 +21,11 @@ export async function refreshToken(): Promise<{
       await getNewAccessToken(refreshToken);
 
     // Mettre à jour le cookie `accessToken`
-    setStoredItemApiRoute('accessToken', accessToken);
+    await setServerCookie('accessToken', accessToken);
 
     // Si un nouveau refreshToken est fourni, mettre à jour le cookie `refreshToken`
     if (newRefreshToken) {
-      setStoredItemApiRoute('refreshToken', newRefreshToken);
+      await setServerCookie('refreshToken', newRefreshToken);
     }
 
     // Retourne les nouveaux tokens
