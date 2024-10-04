@@ -17,6 +17,7 @@ import { refreshTokens } from '@/app/actions/tokenActions';
 import { useRouter } from 'next/navigation';
 import { handleError } from '@/utils/errorUtils';
 import { checkIfTokenExpired } from '@/utils/tokensUtils';
+import { SECRET_TOKEN } from '@/config/env';
 
 interface AuthContextType {
   accessToken: string | null;
@@ -49,9 +50,9 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
       } = await serverLogin(identifier, password);
 
       // Définir les cookies via les Server Actions
-      await setServerCookie('accessToken', accessToken);
-      await setServerCookie('refreshToken', refreshToken);
-      await setServerCookie('role', userRole);
+      await setServerCookie('accessToken', accessToken, SECRET_TOKEN);
+      await setServerCookie('refreshToken', refreshToken, SECRET_TOKEN);
+      await setServerCookie('role', userRole, SECRET_TOKEN);
 
       // Mettre à jour l'état
       setAccessToken(accessToken);
@@ -71,9 +72,9 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
 
   const handleLogout = async () => {
     // Supprimer les cookies via les Server Actions
-    await removeServerCookie('accessToken');
-    await removeServerCookie('refreshToken');
-    await removeServerCookie('role');
+    await removeServerCookie('accessToken', SECRET_TOKEN);
+    await removeServerCookie('refreshToken', SECRET_TOKEN);
+    await removeServerCookie('role', SECRET_TOKEN);
 
     // Réinitialiser l'état
     setAccessToken(null);
@@ -92,9 +93,15 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   useEffect(() => {
     const initializeAuth = async () => {
       try {
-        const storedAccessToken = await getServerCookie('accessToken');
-        const storedRefreshToken = await getServerCookie('refreshToken');
-        const storedRole = await getServerCookie('role');
+        const storedAccessToken = await getServerCookie(
+          'accessToken',
+          SECRET_TOKEN,
+        );
+        const storedRefreshToken = await getServerCookie(
+          'refreshToken',
+          SECRET_TOKEN,
+        );
+        const storedRole = await getServerCookie('role', SECRET_TOKEN);
 
         if (storedAccessToken) {
           setAccessToken(storedAccessToken);

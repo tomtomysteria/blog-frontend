@@ -1,6 +1,6 @@
 import { AxiosError } from 'axios';
 
-class CustomError extends Error {
+export class CustomError extends Error {
   public status: number;
 
   constructor(status: number, message: string) {

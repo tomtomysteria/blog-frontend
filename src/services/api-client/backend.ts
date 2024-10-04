@@ -5,6 +5,7 @@ import {
   getServerCookie,
   setServerCookieNextResponse,
 } from '@/app/actions/cookiesActions';
+import { SECRET_TOKEN } from '@/config/env';
 
 let accessTokenMemory: string | null = null; // Stocke temporairement le token en mémoire
 
@@ -18,7 +19,9 @@ const createApiClient = (withAuth: boolean = true) => {
   if (withAuth) {
     apiClient.interceptors.request.use(async (config) => {
       // Utiliser le token en mémoire ou depuis les cookies
-      const token = accessTokenMemory || (await getServerCookie('accessToken'));
+      const token =
+        accessTokenMemory ||
+        (await getServerCookie('accessToken', SECRET_TOKEN));
 
       if (token) {
         config.headers.Authorization = `Bearer ${token}`; // Ajoute le token au header Authorization
@@ -41,13 +44,20 @@ const createApiClient = (withAuth: boolean = true) => {
           originalRequest._retry = true; // Évite les boucles infinies
 
           try {
-            const refreshToken = await getServerCookie('refreshToken');
+            const refreshToken = await getServerCookie(
+              'refreshToken',
+              SECRET_TOKEN,
+            );
             if (refreshToken) {
               // Obtenir un nouveau token avec le refresh token
               const { accessToken } = await getNewAccessToken(refreshToken);
 
               // Mettre à jour le cookie côté serveur
-              await setServerCookieNextResponse('accessToken', accessToken);
+              await setServerCookieNextResponse(
+                'accessToken',
+                accessToken,
+                SECRET_TOKEN,
+              );
 
               // Mettre à jour le token en mémoire pour éviter de relire les cookies
               accessTokenMemory = accessToken;
