@@ -1,16 +1,12 @@
 'use client';
 
 import { deleteCategory } from '@/app/actions/resources/categoryService';
+import { ResponseCategory } from '@/models/categoryTypes';
 import { useRouter } from 'next/navigation';
 import React from 'react';
 
-interface Category {
-  id: string;
-  name: string;
-}
-
 interface CategoryListProps {
-  categories: Category[];
+  categories: ResponseCategory[];
   isAdmin?: boolean;
 }
 

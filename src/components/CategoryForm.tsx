@@ -32,6 +32,14 @@ const CategoryForm: React.FC<CategoryFormProps> = ({
         <input {...register('name')} />
         {errors.name && <p>{errors.name.message}</p>}
       </div>
+      <div>
+        <label>Description de la catégorie:</label>
+        <textarea
+          {...register('description')}
+          placeholder="Description facultative"
+        />
+        {errors.description && <p>{errors.description.message}</p>}
+      </div>
       <button type="submit">Enregistrer</button>
     </form>
   );

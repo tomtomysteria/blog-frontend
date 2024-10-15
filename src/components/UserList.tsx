@@ -1,17 +1,12 @@
 'use client';
 
 import { deleteUser } from '@/app/actions/resources/userService';
+import { ResponseUser } from '@/models/userTypes';
 import { useRouter } from 'next/navigation';
 import React from 'react';
 
-interface User {
-  id: string;
-  username: string;
-  email: string;
-}
-
 interface UserListProps {
-  users: User[];
+  users: ResponseUser[];
   isAdmin?: boolean;
 }
 
