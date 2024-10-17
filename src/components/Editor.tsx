@@ -3,6 +3,12 @@ import { useEditor, EditorContent } from '@tiptap/react';
 import StarterKit from '@tiptap/starter-kit';
 import Link from '@tiptap/extension-link';
 import Image from '@tiptap/extension-image';
+import {
+  FontBoldIcon,
+  FontItalicIcon,
+  ImageIcon,
+  Link2Icon,
+} from '@radix-ui/react-icons';
 
 type EditorProps = {
   content: string;
@@ -21,7 +27,7 @@ const Editor: React.FC<EditorProps> = ({ content, onContentChange }) => {
     editorProps: {
       attributes: {
         class:
-          'prose prose-sm sm:prose-base lg:prose-lg xl:prose-2xl border border-gray-300 p-2 rounded bg-white focus:outline-none focus:ring-2 focus:ring-blue-500',
+          'prose prose-sm sm:prose-base lg:prose-lg xl:prose-2xl border border-gray-300 p-2 rounded bg-white focus:outline-none focus:ring-2 focus:ring-blue-500 max-w-none',
       },
     },
     content: content || '', // Contenu initial de l'éditeur
@@ -72,41 +78,41 @@ const Editor: React.FC<EditorProps> = ({ content, onContentChange }) => {
 
   return (
     <div>
+      <EditorContent editor={editor} />
+
       {/* Barre d'outils stylisée avec Tailwind */}
-      <div className="flex space-x-2 mb-2">
+      <div className="flex space-x-2 mt-1">
         <button
           type="button"
-          className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-700 disabled:bg-gray-300"
+          className="bg-gray-400 text-white px-1 py-1 text-sm rounded hover:bg-gray-500 disabled:bg-gray-300"
           onClick={() => editor?.chain().focus().toggleBold().run()}
           disabled={!editor?.can().chain().focus().toggleBold().run()}
         >
-          Gras
+          <FontBoldIcon className="h-5 w-5" />
         </button>
         <button
           type="button"
-          className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-700 disabled:bg-gray-300"
+          className="bg-gray-400 text-white px-1 py-1 text-sm rounded hover:bg-gray-500 disabled:bg-gray-300"
           onClick={() => editor?.chain().focus().toggleItalic().run()}
           disabled={!editor?.can().chain().focus().toggleItalic().run()}
         >
-          Italique
+          <FontItalicIcon className="h-5 w-5" />
         </button>
         <button
           type="button"
-          className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-700"
+          className="bg-gray-400 text-white px-1 py-1 text-sm rounded hover:bg-gray-500"
           onClick={setLink}
         >
-          Ajouter un lien
+          <Link2Icon className="h-5 w-5" />
         </button>
         <button
           type="button"
-          className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-700"
+          className="bg-gray-400 text-white px-1 py-1 text-sm rounded hover:bg-gray-500"
           onClick={addImage}
         >
-          Ajouter une image
+          <ImageIcon className="h-5 w-5" />
         </button>
       </div>
-
-      <EditorContent editor={editor} />
     </div>
   );
 };
