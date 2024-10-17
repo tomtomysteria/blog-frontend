@@ -4,6 +4,7 @@ import { deleteUser } from '@/app/actions/resources/userService';
 import { ResponseUser } from '@/models/userTypes';
 import { useRouter } from 'next/navigation';
 import React from 'react';
+import { Button } from './ui/button';
 
 interface UserListProps {
   users: ResponseUser[];
@@ -38,8 +39,18 @@ const UserList = ({ users, isAdmin = false }: UserListProps) => {
           <p>{user.email}</p>
           {isAdmin && (
             <div>
-              <button onClick={() => handleUpdate(user.id)}>Edit</button>
-              <button onClick={() => handleDelete(user.id)}>Delete</button>
+              <Button
+                onClick={() => handleUpdate(user.id)}
+                className="bg-blue-600 hover:bg-blue-500 mr-2"
+              >
+                Modifier
+              </Button>
+              <Button
+                onClick={() => handleDelete(user.id)}
+                variant="destructive"
+              >
+                Supprimer
+              </Button>
             </div>
           )}
         </li>

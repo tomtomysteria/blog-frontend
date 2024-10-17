@@ -4,6 +4,7 @@ import { deleteCategory } from '@/app/actions/resources/categoryService';
 import { ResponseCategory } from '@/models/categoryTypes';
 import { useRouter } from 'next/navigation';
 import React from 'react';
+import { Button } from './ui/button';
 
 interface CategoryListProps {
   categories: ResponseCategory[];
@@ -37,8 +38,18 @@ const CategoryList = ({ categories, isAdmin = false }: CategoryListProps) => {
           <h3 className="text-2xl">{category.name}</h3>
           {isAdmin && (
             <div>
-              <button onClick={() => handleUpdate(category.id)}>Edit</button>
-              <button onClick={() => handleDelete(category.id)}>Delete</button>
+              <Button
+                onClick={() => handleUpdate(category.id)}
+                className="bg-blue-600 hover:bg-blue-500 mr-2"
+              >
+                Modifier
+              </Button>
+              <Button
+                onClick={() => handleDelete(category.id)}
+                variant="destructive"
+              >
+                Supprimer
+              </Button>
             </div>
           )}
         </li>

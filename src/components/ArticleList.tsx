@@ -49,13 +49,13 @@ const ArticleList = ({ articles, isAdmin = false }: ArticleListProps) => {
                 onClick={() => handleUpdate(article.id)}
                 className="bg-blue-600 hover:bg-blue-500 mr-2"
               >
-                Edit
+                Modifier
               </Button>
               <Button
                 onClick={() => handleDelete(article.id)}
                 variant="destructive"
               >
-                Delete
+                Supprimer
               </Button>
             </div>
           )}
