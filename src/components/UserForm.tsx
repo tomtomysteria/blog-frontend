@@ -8,7 +8,14 @@ import {
   UpdateUserSchema,
 } from '@/models/userSchemas';
 import { User } from '@/models/userTypes';
-import { logFormErrors } from '@/utils/errorUtils';
+import { formHasErrors, logFormErrors } from '@/utils/errorUtils';
+import { Button } from './ui/button';
+import { Input } from './ui/input';
+import { Label } from './ui/label';
+import SelectCustom from './SelectCustom';
+import { Alert } from './ui/alert';
+import ErrorAlert from './ErrorAlert';
+import DatePickerCustom from './DatePickerCustom';
 
 type UserFormProps = {
   onSubmit: SubmitHandler<User>;
@@ -25,6 +32,7 @@ const UserForm: React.FC<UserFormProps> = ({
 }) => {
   const {
     register,
+    control,
     handleSubmit,
     formState: { errors },
     // getValues,
@@ -54,53 +62,88 @@ const UserForm: React.FC<UserFormProps> = ({
   // Permet d'afficher les éventuelles erreurs retournés par zod à la soumission du formulaire
   logFormErrors(errors);
 
+  type Role = {
+    value: string;
+    label: string;
+  };
+
+  const roles: Role[] = [
+    { value: 'blogger', label: 'Blogger' },
+    { value: 'admin', label: 'Admin' },
+    { value: 'super-admin', label: 'Super Admin' },
+  ];
+
   return (
     // Utiliser handleFormSubmit à la place de onSubmit directement pour transformer les données si besoin
     <form onSubmit={handleSubmit(onSubmit)}>
       <div>
-        <label>First Name:</label>
-        <input {...register('firstname')} />
-        {errors.firstname && <p>{errors.firstname.message}</p>}
+        <Label>Prénom:</Label>
+        <Input {...register('firstname')} />
+        {errors.firstname && (
+          <Alert variant="noBorder">{errors.firstname.message}</Alert>
+        )}
       </div>
-      <div>
-        <label>Last Name:</label>
-        <input {...register('lastname')} />
-        {errors.lastname && <p>{errors.lastname.message}</p>}
+      <div className="mt-5">
+        <Label>Nom:</Label>
+        <Input {...register('lastname')} />
+        {errors.lastname && (
+          <Alert variant="noBorder">{errors.lastname.message}</Alert>
+        )}
       </div>
-      <div>
-        <label>Email:</label>
-        <input {...register('email', {})} />
-        {errors.email && <p>{errors.email.message}</p>}
+      <div className="mt-5">
+        <Label>Adresse e-mail:</Label>
+        <Input {...register('email', {})} />
+        {errors.email && (
+          <Alert variant="noBorder">{errors.email.message}</Alert>
+        )}
       </div>
-      <div>
-        <label>Username:</label>
-        <input {...register('username')} />
-        {errors.username && <p>{errors.username.message}</p>}
+      <div className="mt-5">
+        <Label>Identifiant:</Label>
+        <Input {...register('username')} />
+        {errors.username && (
+          <Alert variant="noBorder">{errors.username.message}</Alert>
+        )}
       </div>
-      <div>
-        <label>Password:</label>
-        <input
+      <div className="mt-5">
+        <Label>Mot de passe:</Label>
+        <Input
           type="password"
           placeholder="Mot de passe"
           {...register('password')}
         />
-        {errors.password && <p>{errors.password.message}</p>}
+        {errors.password && (
+          <Alert variant="noBorder">{errors.password.message}</Alert>
+        )}
       </div>
-      <div>
-        <label>Birthdate:</label>
-        <input type="date" {...register('birthdate')} />
+      <div className="mt-5">
+        <Label>Date de naissance:</Label>
+        <DatePickerCustom name="birthdate" control={control} />
+        {errors.birthdate && (
+          <Alert variant="noBorder">{errors.birthdate.message}</Alert>
+        )}
       </div>
       {isAdmin && (
-        <div>
-          <label>Role:</label>
-          <select {...register('role', { required: true })}>
-            <option value="blogger">Blogger</option>
-            <option value="admin">Admin</option>
-            <option value="super-admin">Super Admin</option>
-          </select>
+        <div className="mt-5">
+          <Label>Rôle:</Label>
+          <SelectCustom
+            name="role"
+            control={control}
+            context="Sélectionnez un rôle"
+            items={roles}
+            getItemValue={(role) => role.value}
+            getItemLabel={(role) => role.label}
+          />
+          {errors.role && (
+            <Alert variant="noBorder">{errors.role.message}</Alert>
+          )}
         </div>
       )}
-      <button type="submit">Submit</button>
+
+      {formHasErrors(errors) && <ErrorAlert />}
+
+      <Button type="submit" className="mt-10">
+        Enregistrer
+      </Button>
     </form>
   );
 };

@@ -4,10 +4,16 @@ import Editor from '@/components/Editor';
 import { ResponseUser } from '@/models/userTypes';
 import { ResponseCategory } from '@/models/categoryTypes';
 import { Article, ArticleFormValues } from '@/models/articleTypes';
-import { logFormErrors } from '@/utils/errorUtils';
+import { formHasErrors, logFormErrors } from '@/utils/errorUtils';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { ArticleFormValuesSchema } from '@/models/articleSchemas';
 import { cleanHtmlContent } from '@/utils/textUtils';
+import { Button } from './ui/button';
+import { Label } from './ui/label';
+import { Input } from './ui/input';
+import SelectCustom from './SelectCustom';
+import { Alert } from './ui/alert';
+import ErrorAlert from './ErrorAlert';
 
 type ArticleFormProps = {
   onSubmit: SubmitHandler<ArticleFormValues>;
@@ -42,12 +48,14 @@ const ArticleForm: React.FC<ArticleFormProps> = ({
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
       <div>
-        <label>Titre:</label>
-        <input {...register('title')} />
-        {errors.title && <p>{errors.title.message}</p>}
+        <Label>Titre:</Label>
+        <Input {...register('title')} />
+        {errors.title && (
+          <Alert variant="noBorder">{errors.title.message}</Alert>
+        )}
       </div>
-      <div className="my-5">
-        <label>Contenu:</label>
+      <div className="mt-5">
+        <Label>Contenu:</Label>
         <Controller
           name="content"
           control={control}
@@ -58,45 +66,44 @@ const ArticleForm: React.FC<ArticleFormProps> = ({
             />
           )}
         />
-        {errors.content && <p>{errors.content.message}</p>}
+        {errors.content && (
+          <Alert variant="noBorder">{errors.content.message}</Alert>
+        )}
       </div>
-      <div>
-        <label>Auteur:</label>
-        <Controller
+      <div className="mt-5">
+        <Label>Auteur:</Label>
+        <SelectCustom
           name="authorId"
           control={control}
-          render={({ field }) => (
-            <select {...field}>
-              <option value="">Sélectionnez un auteur</option>
-              {authors.map((author) => (
-                <option key={author.id} value={author.id}>
-                  {author.username}
-                </option>
-              ))}
-            </select>
-          )}
+          context="Sélectionnez un auteur"
+          items={authors}
+          getItemValue={(author) => author.id}
+          getItemLabel={(author) => author.username}
         />
-        {errors.authorId && <p>{errors.authorId.message}</p>}
+        {errors.authorId && (
+          <Alert variant="noBorder">{errors.authorId.message}</Alert>
+        )}
       </div>
-      <div>
-        <label>Catégorie:</label>
-        <Controller
+      <div className="mt-5">
+        <Label>Catégorie:</Label>
+        <SelectCustom
           name="categoryId"
           control={control}
-          render={({ field }) => (
-            <select {...field}>
-              <option value="">Sélectionnez une catégorie</option>
-              {categories.map((category) => (
-                <option key={category.id} value={category.id}>
-                  {category.name}
-                </option>
-              ))}
-            </select>
-          )}
+          context="Sélectionnez une catégorie"
+          items={categories}
+          getItemValue={(category) => category.id}
+          getItemLabel={(category) => category.name}
         />
-        {errors.categoryId && <p>{errors.categoryId.message}</p>}
+        {errors.categoryId && (
+          <Alert variant="noBorder">{errors.categoryId.message}</Alert>
+        )}
       </div>
-      <button type="submit">Enregistrer</button>
+
+      {formHasErrors(errors) && <ErrorAlert />}
+
+      <Button type="submit" className="mt-10">
+        Enregistrer
+      </Button>
     </form>
   );
 };
