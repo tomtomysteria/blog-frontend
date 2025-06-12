@@ -58,3 +58,7 @@ yarn lint
 - **TailwindCSS** : design rapide et réactif
 - **Radix UI** : accessibilité native et composants modulables
 - **lucide-react** : icônes vectorielles modernes
+
+## Documentation
+
+Pour plus de détails, consultez la [documentation](./DOCS.md).
