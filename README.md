@@ -1,36 +1,60 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# blog-frontend
 
-## Getting Started
+## Stack technique
 
-First, run the development server:
+- **Framework principal** : [Next.js 14](https://nextjs.org/)
+- **Langage** : TypeScript
+- **Styling** : Tailwind CSS
+- **Formulaires** : React Hook Form + Zod
+- **Rich text** : TipTap (éditeur WYSIWYG)
+- **Gestion des cookies/token** : js-cookie + jwt-decode
+- **HTTP client** : Axios
+- **Composants UI** : Radix UI, lucide-react
+
+## Installation
+
+1. Cloner le dépôt
+2. Installer les dépendances :
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+yarn install
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+3. Créer un fichier `.env.local` avec les variables suivantes :
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+```
+NEXT_PUBLIC_API_URL=http://localhost:3000
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
+## Développement
 
-## Learn More
+```bash
+yarn dev
+```
 
-To learn more about Next.js, take a look at the following resources:
+## Production
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+```bash
+yarn build
+yarn start
+```
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
+## Linting
 
-## Deploy on Vercel
+```bash
+yarn lint
+```
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## Fonctionnalités principales
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+- Inscription et connexion utilisateur
+- Rédaction et modification d’articles avec mise en forme (TipTap)
+- Affichage des articles et commentaires
+- Authentification persistante via JWT
+- Interface responsive et moderne
+
+## Dépendances UI / UX
+
+- **TailwindCSS** : design rapide et réactif
+- **Radix UI** : accessibilité native et composants modulables
+- **lucide-react** : icônes vectorielles modernes
